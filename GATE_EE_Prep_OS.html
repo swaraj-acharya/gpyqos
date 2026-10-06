@@ -313,6 +313,14 @@ table.plain th{color:var(--muted); font-weight:600; font-size:13px}
 .streak i{flex:1; max-width:18px; height:18px; border-radius:4px; background:var(--sunk); border:1px solid var(--line)}
 .streak i.on{background:var(--live); border-color:var(--live)}
 .streak i.now{outline:2px solid var(--amber); outline-offset:1px}
+
+.goal-list{list-style:none; margin:4px 0 8px; padding:0; font-size:13.5px}
+.goal-list li{display:flex; flex-direction:column; gap:1px; padding:5px 0; border-top:1px solid var(--line)}
+.goal-list .gn{font-weight:600}
+.goal-list .ok{color:var(--live)}
+.goal-ed{border:1px solid var(--line); border-radius:var(--r-m); padding:12px 14px; background:var(--panel)}
+.goal-ed .choice[disabled]{opacity:.4; cursor:not-allowed}
+.goal-ed .choice{font-size:13.5px; padding:4px 11px}
 .scroll-x{overflow-x:auto}
 .sr{position:absolute; width:1px; height:1px; overflow:hidden; clip:rect(0 0 0 0)}
 
@@ -1248,23 +1256,72 @@ function metrics() {
    Study days start at settings.dayStartHour (4:00 AM by default), so work done
    at 2 AM still belongs to the previous day. */
 function firstAttemptDay(q) { return q.attempts.length ? q.attempts.reduce((m, a) => (!m || a.day < m ? a.day : m), '') : null; }
-function dailyPlan() {
+/* A goal = some portal subjects + an end date. Several goals can run at once
+   (e.g. Networks by 15 Nov, Machines by 20 Dec); today's target is their sum. */
+function planGoals() {
+  if (!Array.isArray(S.settings.goals)) {
+    S.settings.goals = S.settings.targetDate ? [{ id: uid('goal'), subjects: PORTAL.map(x => x[0]), end: S.settings.targetDate }] : [];
+  }
+  return S.settings.goals;
+}
+function planFor(goal) {
   const today = dayKey();
-  const total = PORTAL_TOTAL;
-  const pyqs = qList().filter(q => q.source.type === 'GATE EE PYQ');
-  const days = pyqs.map(firstAttemptDay).filter(Boolean);
+  const subs = new Set(goal.subjects);
+  const total = PORTAL.filter(x => subs.has(x[0])).reduce((n, x) => n + x[1], 0);
+  const days = qList().filter(q => subs.has(q.pyq.subject)).map(firstAttemptDay).filter(Boolean);
   const doneBefore = days.filter(d => d < today).length;
   const doneToday = days.filter(d => d === today).length;
   const done = doneBefore + doneToday;
-  const target = S.settings.targetDate || '';
-  const out = { today, total, done, doneToday, doneBefore, left: Math.max(0, total - done), target, daysLeft: null, perDay: null, todayLeft: null, status: 'unset' };
-  if (!target) return out;
-  out.daysLeft = daysBetween(today, target) + 1;            // today and the target day both count
+  const out = { goal, total, done, doneToday, doneBefore, left: Math.max(0, total - done), daysLeft: null, perDay: 0, todayLeft: 0, status: 'unset' };
+  if (!goal.end || !goal.subjects.length) return out;
+  out.daysLeft = daysBetween(today, goal.end) + 1;          // today and the end day both count
   if (out.daysLeft < 1) { out.status = 'passed'; return out; }
   out.perDay = Math.ceil(Math.max(0, total - doneBefore) / out.daysLeft); // fixed for the whole study day
   out.todayLeft = Math.max(0, out.perDay - doneToday);
   out.status = out.left === 0 ? 'finished' : out.todayLeft === 0 ? 'met' : 'on';
   return out;
+}
+function todayPlan() {
+  const plans = planGoals().map(planFor);
+  const live = plans.filter(p => p.status === 'on' || p.status === 'met' || p.status === 'finished');
+  return {
+    plans, live,
+    perDay: live.reduce((n, p) => n + p.perDay, 0),
+    doneToday: live.reduce((n, p) => n + Math.min(p.doneToday, p.perDay || p.doneToday), 0),
+    doneTodayAll: live.reduce((n, p) => n + p.doneToday, 0),
+    todayLeft: live.reduce((n, p) => n + p.todayLeft, 0),
+  };
+}
+const subjShort = n => PORTAL_SHORT[n] || n;
+function goalName(g) {
+  if (g.subjects.length === PORTAL.length) return 'All subjects';
+  return g.subjects.map(subjShort).join(', ') || 'No subjects';
+}
+/* ---------- plan editor (modal) ---------- */
+function renderPlanEditor() {
+  const d = UI.planDraft; const today = dayKey();
+  const usedBy = {}; d.forEach((g, i) => g.subjects.forEach(x => { usedBy[x] = i; }));
+  $('#modalBody').innerHTML = `<div class="stack" id="planForm">
+    <p class="small">Each goal is a set of subjects and the date you want them finished. The app splits what is left into a daily number. Use one goal for everything, or one per subject with different dates.</p>
+    ${d.length ? d.map((g, i) => { const pl = planFor(g); return `
+    <div class="goal-ed">
+      <div class="row" style="justify-content:space-between"><b>Goal ${i + 1}</b><button type="button" class="btn ghost small" data-act="planDel" data-i="${i}">Remove</button></div>
+      <div class="qa-lbl" style="margin-top:6px">Subjects <button type="button" class="btn ghost small" data-act="planAll" data-i="${i}">${g.subjects.length ? 'Clear' : 'All free subjects'}</button></div>
+      <div class="choices">${PORTAL.map(([n, c]) => { const other = usedBy[n] !== undefined && usedBy[n] !== i; return `<button type="button" class="choice" data-act="planSub" data-i="${i}" data-v="${esc(n)}" aria-pressed="${g.subjects.includes(n)}" ${other ? `disabled title="Already in goal ${usedBy[n] + 1}"` : ''}>${esc(subjShort(n))} <span class="cnt">${c}</span></button>`; }).join('')}</div>
+      <div class="row" style="margin-top:10px;align-items:flex-end">
+        <label class="f">Finish by<input type="date" data-plan-end="${i}" value="${esc(g.end || '')}" min="${esc(today)}"></label>
+        <span class="small" data-plan-sum="${i}">${planSummary(pl)}</span>
+      </div>
+    </div>`; }).join('') : '<p class="muted small">No goals yet.</p>'}
+    <div class="row"><button type="button" class="btn" data-act="planAdd">+ Add a goal</button></div>
+  </div>`;
+  $('#modalFoot').innerHTML = `<button class="btn" data-act="closeModal">Cancel</button><button class="btn primary" data-act="planSave">Save plan</button>`;
+}
+function planSummary(pl) {
+  if (!pl.goal.subjects.length) return '<span class="muted">Pick at least one subject.</span>';
+  if (!pl.goal.end) return `<span class="muted">${pl.total} questions, ${pl.left} left. Pick a date.</span>`;
+  if (pl.status === 'passed') return '<span class="muted">That date has passed.</span>';
+  return `${pl.left} left of ${pl.total} · ${plural(pl.daysLeft, 'day')} · <b>${pl.perDay} per day</b>`;
 }
 function bestStreak() {
   const keys = Object.keys(S.activity).filter(k => S.activity[k]).sort();
@@ -1812,21 +1869,25 @@ function viewDashboard() {
       <button class="btn primary big" data-act="newQuestion">New question</button>
     </div>` : '';
 
-  const P = dailyPlan();
+  const P = todayPlan();
   const end = dayEndAt();
   const endLabel = end.toLocaleTimeString(undefined, { hour: 'numeric', minute: '2-digit' });
   const streak = streakDays(), bestRun = bestStreak(), todayActive = !!S.activity[today];
   const strip = Array.from({ length: 14 }, (_, i) => addDays(today, i - 13)).map(k => `<i class="${S.activity[k] ? 'on' : ''} ${k === today ? 'now' : ''}" title="${esc(fmtDay(k))}: ${S.activity[k] ? plural(S.activity[k], 'learning action') : 'no activity'}"></i>`).join('');
-  const goalBody = P.status === 'unset' ? `
-      <p class="small">Pick the date you want to finish all ${P.total} PYQs. The app splits what is left into a daily target.</p>
-      <label class="f">Finish all PYQs by<input type="date" data-setting="targetDate" min="${esc(today)}"></label>`
-    : P.status === 'passed' ? `
-      <p class="small">Your finish date (${esc(fmtDay(P.target))}) has passed with ${P.left} questions left. Set a new date to get a fresh daily target.</p>
-      <label class="f">New finish date<input type="date" data-setting="targetDate" min="${esc(today)}"></label>`
+  const goalRow = pl => `<li><span class="gn">${esc(goalName(pl.goal))}</span>${
+      pl.status === 'passed' ? `<span class="muted">date passed, ${pl.left} left</span>`
+      : pl.status === 'unset' ? '<span class="muted">not set</span>'
+      : pl.status === 'finished' ? '<b class="ok">all done</b>'
+      : `<span><b class="${pl.todayLeft ? '' : 'ok'}">${pl.doneToday}/${pl.perDay}</b> <span class="muted">· ${pl.left} left · by ${esc(fmtDay(pl.goal.end))}</span></span>`}</li>`;
+  const goalBody = !P.plans.length ? `
+      <p class="small">Choose the subjects and the date you want to finish them. The app works out how many questions to do each day.</p>
+      <button class="btn primary" data-act="planEdit">Set up my plan</button>`
     : `
-      <div class="plan-big"><span class="bigfig">${P.doneToday}<span class="of">/${P.perDay}</span></span><span class="small muted">questions today</span></div>
+      ${P.live.length ? `<div class="plan-big"><span class="bigfig">${P.doneToday}<span class="of">/${P.perDay}</span></span><span class="small muted">questions today</span></div>
       <div class="meter" style="margin:8px 0"><i style="width:${P.perDay ? Math.min(100, (P.doneToday / P.perDay) * 100) : 100}%;background:var(--live)"></i></div>
-      <p class="small" style="margin:0">${P.status === 'finished' ? '<b>All PYQs completed.</b>' : P.status === 'met' ? `<b>Today's target is done.</b> Anything extra lowers tomorrow's target.` : `<b>${plural(P.todayLeft, 'question')}</b> left for today.`}</p>`;
+      <p class="small" style="margin:0 0 6px">${P.todayLeft ? `<b>${plural(P.todayLeft, 'question')}</b> left for today.` : `<b>Today's target is done.</b> Extra work lowers tomorrow's number.`}</p>` : ''}
+      <ul class="goal-list">${P.plans.map(goalRow).join('')}</ul>
+      <button class="btn ghost small" data-act="planEdit">Edit subjects &amp; dates</button>`;
   const planPanel = `
   <div class="plan">
     <section class="panel">
@@ -1846,7 +1907,7 @@ function viewDashboard() {
       <p class="small muted" style="margin:0">${todayActive ? 'Today is counted.' : streak ? `Do one learning action before ${esc(endLabel)} to keep it.` : 'Log an attempt, hint or revision to start one.'} Best: ${plural(bestRun, 'day')}.</p>
     </section>
   </div>
-  ${P.target && P.status !== 'passed' ? `<p class="small muted plan-line">${P.done} of ${P.total} PYQs completed · ${P.left} left · ${plural(P.daysLeft, 'study day')} until ${esc(fmtDay(P.target))} (including today) · <a href="#/settings">change date</a>. A question counts as completed on the day you log its first attempt.</p>` : ''}`;
+  ${P.plans.length ? `<p class="small muted plan-line">A question counts as completed on the study day you log its first attempt, under its PYQ subject. Days left include today and the finish date.</p>` : ''}`;
   return `
   <div class="page-head">
     <div><h1>Today</h1><p>Study day ${esc(fmtDay(today))}, which began at ${pad(startH)}:00. ${S.activity[today] ? plural(S.activity[today], 'learning action') + ' recorded today' : 'Nothing recorded yet today'}${streakDays() > 1 ? `, ${streakDays()}-day streak` : ''}.</p></div>
@@ -2691,11 +2752,11 @@ function viewSettings() {
   </div>
   <div class="panel stack">
     <h2>Study settings</h2>
+    <div class="row"><span class="small" style="flex:1">Daily plan: ${planGoals().length ? planGoals().map(g => `${esc(goalName(g))} by ${g.end ? esc(fmtDay(g.end)) : '—'}`).join('; ') : 'not set'}</span><button class="btn" data-act="planEdit">Edit subjects &amp; dates</button></div>
     <div class="grid3">
       <label class="f">Study day starts at${selectEl('data-setting="dayStartHour"', Array.from({ length: 13 }, (_, h) => [String(h), `${pad(h)}:00`]), String(S.settings.dayStartHour))}</label>
       <label class="f">Revision ladder (days)<input type="text" data-setting="intervals" value="${esc(S.settings.intervals.join(', '))}"></label>
       <label class="f">Maintenance gap after the ladder (days)<input type="number" min="14" data-setting="maintenanceDays" value="${esc(S.settings.maintenanceDays)}"></label>
-      <label class="f">Finish all ${PORTAL_TOTAL} PYQs by<input type="date" data-setting="targetDate" value="${esc(S.settings.targetDate || '')}" min="${esc(dayKey())}"></label>
       <label class="f">Target marks<input type="number" min="1" max="100" data-setting="targetMarks" value="${esc(S.settings.targetMarks)}"></label>
       <label class="f">Theme${selectEl('data-setting="theme"', [['auto', 'Follow the system'], ['light', 'Light'], ['dark', 'Dark']], S.settings.theme)}</label>
     </div>
@@ -2916,6 +2977,37 @@ const ACT = {
     renderQuickAdd('qaYear');
   },
   qaSave(el) { qaSave(!!el.dataset.open); },
+  planEdit() {
+    UI.planDraft = planGoals().map(g => ({ ...g, subjects: [...g.subjects] }));
+    if (!UI.planDraft.length) UI.planDraft.push({ id: uid('goal'), subjects: PORTAL.map(x => x[0]), end: '' });
+    openModal('Daily plan', '', ''); renderPlanEditor();
+  },
+  planAdd() {
+    const used = new Set(UI.planDraft.flatMap(g => g.subjects));
+    UI.planDraft.push({ id: uid('goal'), subjects: [], end: '' });
+    if (used.size === PORTAL.length) toast('Every subject is already in a goal. Remove one from another goal first.');
+    renderPlanEditor();
+  },
+  planDel(el) { UI.planDraft.splice(+el.dataset.i, 1); renderPlanEditor(); },
+  planSub(el) {
+    const g = UI.planDraft[+el.dataset.i], v = el.dataset.v;
+    g.subjects = g.subjects.includes(v) ? g.subjects.filter(x => x !== v) : PORTAL.map(x => x[0]).filter(x => x === v || g.subjects.includes(x));
+    renderPlanEditor();
+  },
+  planAll(el) {
+    const i = +el.dataset.i, g = UI.planDraft[i];
+    if (g.subjects.length) g.subjects = [];
+    else { const used = new Set(UI.planDraft.filter((_, j) => j !== i).flatMap(x => x.subjects)); g.subjects = PORTAL.map(x => x[0]).filter(x => !used.has(x)); }
+    renderPlanEditor();
+  },
+  planSave() {
+    const d = UI.planDraft.filter(g => g.subjects.length || g.end);
+    const bad = d.find(g => !g.subjects.length || !g.end);
+    if (bad) { toast('Every goal needs at least one subject and a finish date.', true); return; }
+    if (d.some(g => g.end < dayKey())) { toast('Finish dates must be today or later.', true); return; }
+    S.settings.goals = d; delete S.settings.targetDate;
+    UI.planDraft = null; closeModal(); toast('Plan saved.'); commit();
+  },
   pyqFold(el) {
     const on = !!el.dataset.open;
     for (const [s, , ts] of PORTAL) { UI.openSections['pyq:' + s] = on; for (const [t] of ts) UI.openSections['pyq:' + pyqKey(s, t)] = on; }
@@ -3200,6 +3292,11 @@ document.addEventListener('input', e => {
   if (ds.vnote) { const q = getQ(ds.qid); const v = q && q.variations.find(x => x.id === ds.vnote); if (v) { v.notes = t.value; touch(q); draftSave(); } return; }
   if (ds.ab) { const [qid, mode, field] = ds.ab.split('|'); const d = UI.attempt[qid + '|' + mode]; if (d && field !== 'kind') d[field] = t.value; return; }
   if (ds.rb) { const [qid, field] = ds.rb.split('|'); const d = UI.review[qid]; if (d) d[field] = t.value; return; }
+  if (ds.planEnd !== undefined && UI.planDraft) {
+    const i = +ds.planEnd; UI.planDraft[i].end = t.value;
+    const sum = $(`[data-plan-sum="${i}"]`); if (sum) sum.innerHTML = planSummary(planFor(UI.planDraft[i]));
+    return;
+  }
   if (ds.qa && UI.qa) {
     UI.qa[ds.qa] = t.value;
     if (ds.qa === 'find') { const r = $('#qaFindRes'); if (r) r.innerHTML = qaFindResults(); }
