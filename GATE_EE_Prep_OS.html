@@ -252,6 +252,67 @@ dialog .mf{display:flex; gap:8px; justify-content:flex-end; padding:12px 18px; b
 table.plain{border-collapse:collapse; width:100%; font-size:14px}
 table.plain th,table.plain td{text-align:left; padding:6px 8px; border-bottom:1px solid var(--line); vertical-align:top}
 table.plain th{color:var(--muted); font-weight:600; font-size:13px}
+
+/* ---------- PYQ tracker ---------- */
+.pyq-sum{display:grid; grid-template-columns:repeat(5,minmax(0,1fr)); border:1px solid var(--line); border-radius:var(--r-m); background:var(--panel); margin-bottom:14px; overflow:hidden}
+.pyq-sum > div{padding:12px 16px; border-right:1px solid var(--line)}
+.pyq-sum > div:last-child{border-right:0}
+.pyq-sum .lbl{display:block; font-size:12.5px; color:var(--muted)}
+.pyq-sum .v{display:block; font-size:24px; font-weight:600; font-variant-numeric:tabular-nums}
+@media (max-width:700px){.pyq-sum{grid-template-columns:repeat(2,minmax(0,1fr))} .pyq-sum > div{border-bottom:1px solid var(--line)}}
+.pyq{min-width:640px; border:1px solid var(--line); border-radius:var(--r-m); background:var(--panel); overflow:hidden}
+.pyq-row{display:grid; grid-template-columns:minmax(0,1fr) 84px 64px 80px 64px 86px; gap:8px; align-items:center; padding:9px 14px; border-top:1px solid var(--line)}
+.pyq-row .n{text-align:center; font-variant-numeric:tabular-nums}
+.pyq-row .z{color:var(--wire)}
+.pyq-row .ok{color:var(--live)}
+.pyq-row .act{text-align:right}
+.pyq-row .cnt{font-size:12px; color:var(--muted); font-weight:400}
+.pyq-head{border-top:0; background:var(--sunk); font-size:13px; font-weight:600; color:var(--ink2)}
+.pyq details > summary{list-style:none; cursor:pointer}
+.pyq details > summary::-webkit-details-marker{display:none}
+.pyq .tw{display:inline-block; width:18px; color:var(--muted); font-family:var(--mono)}
+.pyq .tw::before{content:"+"}
+.pyq details[open] > summary .tw::before{content:"\2212"}
+.pyq-row.lvl0{background:var(--sunk); font-weight:600}
+.pyq-row.lvl0 .nm{display:flex; align-items:center; gap:0 4px; flex-wrap:wrap}
+.pyq-meter{width:100%; max-width:220px; height:4px; margin:4px 0 0 18px; flex-basis:100%}
+.pyq-row.lvl1{padding-left:26px}
+.pyq-row.lvl2{padding:6px 14px 6px 62px; font-size:14px}
+.pyq-subs{background:var(--paper)}
+.pyq summary:hover, .pyq-row.lvl2:hover{background:var(--live-soft)}
+.pyq-add{padding:3px 9px}
+
+/* ---------- quick add ---------- */
+.qa{gap:14px}
+.qa-lbl{font-size:12.5px; font-weight:600; color:var(--muted); margin-bottom:6px; text-transform:uppercase; letter-spacing:.04em}
+.qa .choice{font-size:13.5px; padding:4px 11px}
+.qa .choice .cnt{font-size:11.5px; color:var(--muted); font-weight:400; font-variant-numeric:tabular-nums}
+.qa-find{position:relative}
+.qa-res{display:flex; flex-direction:column; gap:2px; margin-top:4px}
+.qa-res:empty{display:none}
+.qa-hit{display:flex; flex-wrap:wrap; gap:2px 10px; align-items:baseline; text-align:left; border:1px solid var(--line); background:var(--panel); border-radius:var(--r-s); padding:6px 10px; cursor:pointer}
+.qa-hit:hover, .qa-hit:first-child{border-color:var(--live); background:var(--live-soft)}
+.qa-path{display:flex; flex-wrap:wrap; align-items:center; gap:4px; padding:8px 12px; border-radius:var(--r-s); background:var(--sunk); border-left:3px solid var(--wire); font-weight:600}
+.qa-path.ok{border-left-color:var(--live); background:var(--live-soft)}
+.qa-line{display:flex; flex-wrap:wrap; gap:14px; align-items:flex-end}
+.qa-line label.f{width:120px}
+.qa-line .f{display:flex; flex-direction:column; gap:4px; font-size:13px; font-weight:500; color:var(--ink2)}
+.qa .seg button{padding:6px 14px}
+.kbd{display:inline-block; font-family:var(--mono); font-size:11px; border:1px solid var(--line); border-bottom-width:2px; border-radius:4px; padding:0 5px; background:var(--panel); color:var(--ink2); margin-right:4px}
+@media (max-width:640px){.qa-keys{display:none}}
+
+/* ---------- daily plan ---------- */
+.plan{display:grid; grid-template-columns:1.2fr 1fr 1fr; gap:14px; margin-bottom:8px}
+.plan > .panel{margin-top:0}
+.plan h3{font-size:14px; color:var(--muted); font-weight:600; margin-bottom:8px}
+@media (max-width:980px){.plan{grid-template-columns:1fr}}
+.plan .of{font-size:16px; color:var(--muted); font-weight:500; letter-spacing:0}
+.plan-big{display:flex; align-items:baseline; gap:10px; flex-wrap:wrap}
+.plan-line{margin:0 0 14px}
+.streak{display:flex; gap:4px; margin:10px 0}
+.streak i{flex:1; max-width:18px; height:18px; border-radius:4px; background:var(--sunk); border:1px solid var(--line)}
+.streak i.on{background:var(--live); border-color:var(--live)}
+.streak i.now{outline:2px solid var(--amber); outline-offset:1px}
 .scroll-x{overflow-x:auto}
 .sr{position:absolute; width:1px; height:1px; overflow:hidden; clip:rect(0 0 0 0)}
 
@@ -386,6 +447,36 @@ const PAPER_PATTERN = {
   types: 'MCQ, MSQ and NAT; each question carries 1 or 2 marks',
   negative: 'Wrong MCQ: −1/3 (1-mark) or −2/3 (2-mark). No negative marking for MSQ or NAT. No partial marks in MSQ.',
 };
+
+/* ---------------------------------------------------------------------
+   ExamDost PYQ portal tree — learn.examdost.com, GATE Electrical Engineering
+   PYQ page, read from your screenshot on 2026-10-06. Counts are the portal's
+   question counts. Shape: [subject, questions, [[topic, questions,
+   [[sub-topic, questions], ...]], ...]]. Where the portal's sub-topic counts
+   do not add up to the topic count, the portal's own numbers are kept.
+   --------------------------------------------------------------------- */
+const PORTAL_NAME = 'ExamDost GATE EE PYQ';
+const PORTAL = [
+  ["Network Analysis", 268, [["Network Basics", 60, [["Network Elements", 12], ["Kirchhoffs Laws", 2], ["Nodal and Mesh Analysis", 25], ["Power and Energy Calculation", 18], ["Duality", 3]]], ["Network Theorems - DC Circuits", 29, [["Thevenin and Norton Theorem", 14], ["Maximum Power Transfer Theorem - DC Circuits", 6], ["Other Theorems - DC Circuits", 9]]], ["Transient Analysis", 48, [["Initial and Final Conditions", 12], ["First Order Circuits", 29], ["Second Order Circuits", 5], ["Laplace Transform Method", 2]]], ["Sinusoidal Steady State Analysis", 83, [["Phasor Analysis", 24], ["Maximum Power Transfer Theorem - AC Circuits", 3], ["Other Theorems - AC Circuits", 9], ["Power in AC Circuits", 23], ["Miscellaneous", 3], ["Resonance", 21]]], ["Two Port Network", 18, [["Two Port Network", 18]]], ["Graph Theory", 7, [["Graph Theory", 7]]], ["Three Phase Circuits", 12, [["Three Phase Circuits", 12]]], ["Magnetically Coupled Circuits", 11, [["Magnetically Coupled Circuits", 11]]]]],
+  ["Signals and Systems", 168, [["Signals", 26, [["Delta Function", 5], ["Periodic and other Signals", 6], ["Signal Graphical Representation", 2], ["Energy and Power Signals", 10], ["Waveform Synthesis and Parameters", 3]]], ["LTI Systems", 42, [["LTI System Properties", 24], ["Continuous Convolution", 11], ["Discrete Convolution", 7]]], ["Fourier Series", 22, [["Continuous Time Fourier Series", 13], ["Properties of Fourier Series", 8], ["Discrete Time Fourier Series", 1]]], ["Fourier Transform", 28, [["Continuous Time Fourier Transform Calculation", 11], ["Continuous Time Transform Properties", 16], ["Discrete Time Fourier Transform Calculation", 0], ["Discrete Time Fourier Transform Properties", 1], ["Discrete Fourier Transform and Fast Fourier Transform", 0]]], ["Laplace Transform", 22, [["Laplace Transform Calculation", 10], ["Laplace Transform Properties", 10], ["Initial and Final Value Theorem", 2]]], ["Z Transform", 20, [["Z-Transform Calculation", 7], ["Z-Transform Properties", 12], ["Initial and Final Value Theorem - Z Transform", 1]]], ["Sampling", 8, [["Sampling", 8]]], ["Digital Filter Design", 0, [["Digital Filters", 0]]]]],
+  ["Control Systems", 262, [["Transfer Function", 28, [["Transfer Function", 8], ["Block Diagram", 8], ["Signal Flow Graph", 8], ["Mathematical Modelling and Sensitivity", 4]]], ["Time Response Analysis", 55, [["Steady State Analysis", 18], ["Transient Analysis", 37]]], ["Stability", 33, [["Routh Criteria", 33]]], ["Root Locus Technique", 18, [["Root Locus", 18], ["Complimentary Root Locus", 0]]], ["Frequency Domain Analysis", 64, [["Frequency Response", 16], ["Polar Plot", 4], ["Nyquist Plot and Stability Criterion", 14], ["Gain Margin and Phase Margin", 9], ["Bode Plot", 21]]], ["State Variable Analysis", 46, [["Deriving State Model", 12], ["State Model Analysis", 27], ["Controllability and Observability", 7]]], ["Control System Design", 18, [["Compensators", 13], ["Controller", 5]]]]],
+  ["Analog Electronics", 186, [["Diode and Its Applications", 35, [["Diode Basics and Diode Circuit Analysis", 16], ["Rectifier Circuits", 8], ["Filter Circuits", 0], ["Voltage Regulator", 5], ["Wave Shaping Circuits", 6]]], ["BJT", 43, [["DC Analysis and Biasing Circuits of BJT", 29], ["Small signal analysis of BJT", 7], ["Single stage BJT Amplifier", 7], ["Low frequency and High frequency response of BJT", 0]]], ["JFET", 0, [["DC Analysis and Biasing Circuits of JFET", 0], ["Small signal analysis of JFET", 0], ["Single stage JFET Amplifier", 0], ["Low frequency and High frequency response of JFET", 0]]], ["MOSFET", 16, [["DC Analysis and Biasing Circuits of MOSFET", 10], ["Small signal analysis of MOSFET", 4], ["Single stage MOSFET Amplifier", 2], ["Low frequency and High frequency response of MOSFET", 0]]], ["Amplifiers", 13, [["Multistage Amplifiers", 2], ["Differential Amplifiers", 1], ["Feedback Amplifiers", 7], ["Power Amplifiers", 3]]], ["OP-AMP and its Applications", 79, [["Op-amp", 8], ["Positive feedback applications", 11], ["Negative feedback applications", 60]]], ["Oscillators", 0, [["Sinusoidal Oscillator Circuits and 555 timers", 0]]]]],
+  ["Digital Electronics", 150, [["Number Systems", 1, [["Radix Conversion and Addition/Subtraction", 1], ["Binary Codes", 0]]], ["Boolean Algebra", 20, [["Boolean Algebra", 7], ["Logic Gates", 10], ["K-Map", 3]]], ["Combinational Circuits", 28, [["Multiplexer and Demultiplexer", 8], ["Encoders and Decoders", 2], ["Adders and Subtractors", 1], ["Other Circuits", 17]]], ["Sequential Circuits", 36, [["Flip Flops", 15], ["Counters", 15], ["Registers", 1], ["State Machine", 5]]], ["Data Converters", 22, [["ADC", 20], ["DAC", 2]]], ["Logic Family", 10, [["Logic Families", 10]]], ["Memory", 0, [["Memory", 0]]], ["Microprocessor", 33, [["Microprocessor", 33]]], ["Computer Organisation", 0, [["Computer Organisation", 0]]]]],
+  ["Electrical Machines", 399, [["Transformers", 112, [["Construction of Transformer", 14], ["Induced EMF - Transformer", 21], ["Equivalent Circuit - Transformer", 16], ["Testing of a Transformer", 5], ["Losses and Efficiency - Transformer", 18], ["Voltage Regulation - Transformer", 6], ["Three Phase Transformer", 15], ["Auto Transformer", 11], ["Parallel Operation - Transformer", 6], ["Harmonics in Transformer", 0]]], ["DC Machines", 81, [["Construction of DC Machines", 8], ["EMF and Torque Equation", 20], ["Equivalent Circuit - DC Machines", 3], ["Losses and Efficiency - DC Machines", 5], ["Speed Control of DC Motor", 15], ["Starting, Braking and Testing of DC Motor", 4], ["Characteristics of DC machines", 20], ["Electromechanical Energy Conversion", 6]]], ["Synchronous Machines", 84, [["Induced EMF - Synchronous Machines", 13], ["Voltage Regulation Methods", 0], ["Equivalent Circuit - Synchronous Machines", 5], ["Synchronous Impedance", 8], ["Power Angle Equation", 9], ["Parallel Operation - Synchronous Machines", 5], ["Losses and Efficiency - Synchronous Machines", 2], ["Voltage Regulation - Synchronous Machines", 11], ["Droop Characteristics", 5], ["Salient Pole Machines", 4], ["Synchronous Motor", 16], ["Cascading of Machines", 1], ["Contruction and Physical Phenomenon", 5]]], ["Induction Machines", 113, [["Construction and Rotating Magnetic Field", 15], ["Equivalent Circuit - Induction Machines", 9], ["Torque Slip Characteristics", 20], ["Power and Efficiency", 13], ["Tests on an Induction Motor", 5], ["Starting of Induction Motor", 16], ["Speed Control", 20], ["Stability of Induction Motor", 4], ["Single Phase Induction Motor", 11], ["Stepper Motor", 0]]], ["Special Machines", 9, [["Special Machines", 9]]]]],
+  ["Power Electronics", 243, [["Power Semiconductor Devices", 49, [["Switch Characteristics", 21], ["Triggering and Characteristics of SCR", 14], ["Protection and Connection of SCR", 9], ["Other Devices", 5]]], ["Phase Controlled Converter", 84, [["Single Phase Converter", 56], ["Three Phase Converter", 25], ["Effect of Source Inductance", 1], ["Dual Converter", 2]]], ["Chopper", 54, [["Buck Converter", 28], ["Boost Converter", 8], ["Buck Boost Converter", 9], ["Thyristor Commutation Techniques", 9]]], ["Inverter", 40, [["Single Phase Inverter", 20], ["Three Phase Inverter", 14], ["PWM Control", 4], ["Current Source Inverter", 2]]], ["AC and DC Drives", 9, [["AC Drives", 0], ["DC Drives", 9]]], ["AC Voltage Controller", 7, [["AC Voltage Regulator", 6], ["Cycloconverter", 1]]]]],
+  ["Power Systems", 350, [["Power System Generation", 9, [["Power Plants", 7], ["Economic Power Generation", 2]]], ["Transmission and Distribution", 140, [["Transmission Line Parameters (L and C)", 19], ["Short and Medium Transmission Line", 7], ["Wave Nature of Long Transmission Line", 16], ["Surges in Transmission Line", 6], ["Power and ABCD Parameters", 24], ["Voltage and Frequency Control", 18], ["Power Factor Correction", 14], ["UG Cables", 8], ["Overhead Insulators", 7], ["Corona", 4], ["Distribution Systems", 7], ["HVDC", 10]]], ["Economic Load Dispatch", 18, [["Economic Load Dispatch", 18]]], ["Fault Analysis", 67, [["Per Unit System", 12], ["Symmetrical Components", 14], ["Sequence Network", 9], ["Symmetrical Fault Analysis", 14], ["Unsymmetrical Fault Analysis", 14], ["Zbus Based Fault Analysis", 4]]], ["Power System Stability", 33, [["Swing Equation", 21], ["Steady State Stability", 3], ["Equal Area Criteria", 9]]], ["Load Flow Analysis", 42, [["Power System Matrices", 29], ["Gauss Seidel Iteration", 2], ["Newton Raphson Method", 11]]], ["Power System Protection", 41, [["Circuit Breakers", 9], ["Overcurrent Protection", 7], ["Protection of Alternator", 6], ["Protection of Transformer", 9], ["Protection of Transmission Line", 10]]]]],
+  ["EMFT EE", 111, [["Electrostatics", 64, [["Coulombs Law and Electric Field", 14], ["Electric Flux and Gauss Law", 11], ["Electric Potential and Potential Gradient", 13], ["Capacitance and Dielectrics", 16], ["Energy in Electrostatic Fields", 6], ["Boundary Conditions", 4]]], ["Magnetostatics", 47, [["Biot-Savart Law", 5], ["Amperes Circuital Law", 4], ["Magnetic Flux Density and Field Intensity", 11], ["Magnetic Materials and Boundary Conditions", 4], ["Inductance and Magnetic Energy", 8], ["Force on Conductors and Charges", 7], ["Faradays Law, Lenz Law and Motional EMF", 8]]]]],
+  ["Measurement", 160, [["Error Analysis", 15, [["Error Analysis", 15], ["Units and Dimensions", 0]]], ["Electro-mechanical Instruments", 79, [["PMMC Instruments", 14], ["Moving Iron Instruments", 7], ["Electrodynamometer Instruments", 2], ["Ammeter and Voltmeter", 18], ["Wattmeter", 27], ["Energy Meter", 5], ["Other Instruments", 6]]], ["Measurement of R,L and C", 22, [["Measurement of Inductance", 6], ["Measurement of Capacitance", 2], ["Measurement of Frequency", 2], ["Measurement of Resistance", 12]]], ["CRO", 19, [["CRO", 9], ["Lissajous Pattern", 10]]], ["Instrument Transformer", 12, [["Potential Transformer", 0], ["Current Transformer", 12]]], ["Potentiometer and Q-Meter", 6, [["Potentiometer", 4], ["Q-Meter", 2]]], ["Digital Instruments", 3, [["Digital Instruments", 3]]], ["Transducers", 4, [["Measurement of Displacement", 2], ["Measurement of Force", 2], ["Measurement of Pressure", 0], ["Measurement of Angular Speed", 0], ["Measurement of Flow Rate", 0], ["Measurement of Temperature", 0]]]]],
+  ["Engineering Mathematics", 236, [["Linear Algebra", 75, [["Matrices and Determinants", 35], ["Solution of Linear Equations", 14], ["Eigen Values and Eigen Vectors", 26]]], ["Calculus", 64, [["Differential Calculus", 31], ["Integral Calculus", 11], ["Vector Calculus", 22]]], ["Differential Equations", 20, [["First Order Differential Equations", 11], ["Higher Order Differential Equations", 9]]], ["Complex Functions", 25, [["Analytic Functions - Cauchy Riemann Equations and Complex Numbers", 1], ["Complex Integral", 15]]], ["Probability and Statistics", 33, [["Probability", 17], ["Statistics", 2], ["Random Variable", 14]]], ["Numerical Methods", 14, [["Solution of Non-Linear Equation", 9], ["Numerical Integration", 1], ["Numerical Solution of Differential Equations", 4]]], ["Transform Theory", 5, [["Laplace Transform", 3], ["Fourier Transform", 2], ["Z-Transform", 0]]]]],
+  ["General Aptitude", 221, [["Numerical Ability", 120, [["Number System", 16], ["Arithmetic", 14], ["Time, Work and Speed", 6], ["Algebra", 26], ["Mensuration and Geometry", 15], ["Data Interpretation", 19], ["Modern Maths", 24]]], ["Verbal Ability", 101, [["Grammar", 13], ["Spotting Errors", 2], ["Objective Comprehension", 7], ["Sentence Completion", 17], ["Sentence Improvement", 1], ["Analogy", 11], ["Ordering of Sentences", 1], ["Vocabulary", 20], ["Critical Reasoning", 22], ["Miscellaneous - Verbal Ability", 0]]]]],
+];
+const PORTAL_TOTAL = PORTAL.reduce((n, s) => n + s[1], 0);
+const PORTAL_FLAT = PORTAL.flatMap(([s, , ts]) => ts.flatMap(([t, , subs]) => subs.map(([u, n]) => ({ subject: s, topic: t, subtopic: u, n }))));
+const PORTAL_SHORT = { 'Network Analysis': 'Networks', 'Signals and Systems': 'Signals', 'Control Systems': 'Control', 'Analog Electronics': 'Analog', 'Digital Electronics': 'Digital', 'Electrical Machines': 'Machines', 'Power Electronics': 'Power Elec.', 'Power Systems': 'Power Sys.', 'EMFT EE': 'EMFT', 'Measurement': 'Measurement', 'Engineering Mathematics': 'Maths', 'General Aptitude': 'Aptitude' };
+const portalSubject = name => PORTAL.find(s => s[0] === name) || null;
+const portalTopic = (subject, topic) => { const s = portalSubject(subject); return s ? s[2].find(t => t[0] === topic) || null : null; };
+const pyqKey = (...parts) => parts.filter(Boolean).join(' › ');
+function pyqPath(q) { const p = q.pyq || {}; return [p.subject, p.topic, p.subtopic].filter(Boolean); }
 
 /* ---------------------------------------------------------------------
    Vocabulary
@@ -532,7 +623,7 @@ function emptyState() {
     schemaVersion: SCHEMA_VERSION,
     app: APP_NAME,
     meta: { nextQuestion: 1, nextPattern: 1, createdAt: nowISO(), updatedAt: nowISO() },
-    settings: { dayStartHour: 4, intervals: [1, 3, 7, 21, 45], maintenanceDays: 90, targetMarks: 60, theme: 'auto' },
+    settings: { dayStartHour: 4, intervals: [1, 3, 7, 21, 45], maintenanceDays: 90, targetMarks: 60, theme: 'auto', targetDate: '' },
     questions: {},
     patterns: {},
     topicNotes: {},
@@ -546,6 +637,7 @@ function normQuestion(q) {
   const base = {
     id: '', title: '', statement: '', topicGuess: '', officialAnswer: '',
     source: { type: 'GATE EE PYQ', year: null, questionNumber: '', reference: '' },
+    pyq: { subject: '', topic: '', subtopic: '' },
     qType: '', marks: null,
     syllabusLinks: [], concepts: [], tags: [],
     currentStage: 'learn', stagesDone: {},
@@ -556,6 +648,7 @@ function normQuestion(q) {
   };
   const out = { ...base, ...(q || {}) };
   out.source = { ...base.source, ...((q && q.source) || {}) };
+  out.pyq = { ...base.pyq, ...((q && q.pyq) || {}) };
   out.revision = { ...base.revision, ...((q && q.revision) || {}) };
   for (const k of ['syllabusLinks', 'concepts', 'tags', 'attempts', 'interactions', 'patternIds', 'variations', 'mistakes']) if (!Array.isArray(out[k])) out[k] = [];
   if (!Array.isArray(out.revision.history)) out.revision.history = [];
@@ -1150,6 +1243,46 @@ function metrics() {
   };
 }
 
+/* ---------- daily plan: finish every portal PYQ by the target date ----------
+   A question counts as completed on the study day of its first logged attempt.
+   Study days start at settings.dayStartHour (4:00 AM by default), so work done
+   at 2 AM still belongs to the previous day. */
+function firstAttemptDay(q) { return q.attempts.length ? q.attempts.reduce((m, a) => (!m || a.day < m ? a.day : m), '') : null; }
+function dailyPlan() {
+  const today = dayKey();
+  const total = PORTAL_TOTAL;
+  const pyqs = qList().filter(q => q.source.type === 'GATE EE PYQ');
+  const days = pyqs.map(firstAttemptDay).filter(Boolean);
+  const doneBefore = days.filter(d => d < today).length;
+  const doneToday = days.filter(d => d === today).length;
+  const done = doneBefore + doneToday;
+  const target = S.settings.targetDate || '';
+  const out = { today, total, done, doneToday, doneBefore, left: Math.max(0, total - done), target, daysLeft: null, perDay: null, todayLeft: null, status: 'unset' };
+  if (!target) return out;
+  out.daysLeft = daysBetween(today, target) + 1;            // today and the target day both count
+  if (out.daysLeft < 1) { out.status = 'passed'; return out; }
+  out.perDay = Math.ceil(Math.max(0, total - doneBefore) / out.daysLeft); // fixed for the whole study day
+  out.todayLeft = Math.max(0, out.perDay - doneToday);
+  out.status = out.left === 0 ? 'finished' : out.todayLeft === 0 ? 'met' : 'on';
+  return out;
+}
+function bestStreak() {
+  const keys = Object.keys(S.activity).filter(k => S.activity[k]).sort();
+  let best = 0, run = 0, prev = null;
+  for (const k of keys) { run = prev && addDays(prev, 1) === k ? run + 1 : 1; best = Math.max(best, run); prev = k; }
+  return best;
+}
+/* Milliseconds until the current study day ends (the next dayStartHour). */
+function dayEndAt(now = new Date()) {
+  const h = Number(S.settings.dayStartHour ?? 4);
+  const end = new Date(now.getFullYear(), now.getMonth(), now.getDate(), h, 0, 0, 0);
+  if (now >= end) end.setDate(end.getDate() + 1);
+  return end;
+}
+function fmtCountdown(ms) {
+  const t = Math.max(0, Math.floor(ms / 1000));
+  return `${pad(Math.floor(t / 3600))}:${pad(Math.floor(t / 60) % 60)}:${pad(t % 60)}`;
+}
 function streakDays() {
   let n = 0, k = dayKey();
   if (!S.activity[k]) k = addDays(k, -1);
@@ -1592,6 +1725,7 @@ function renderReply(text) {
 const UI = {
   route: { view: 'dashboard' }, search: '', listFilter: 'all', topicFilter: null,
   prompts: {}, helpTab: {}, showEarly: {}, attempt: {}, review: {}, justSaved: {},
+  pyqFilter: '', qa: null, qaCount: 0,
   patSearch: '', patSection: '', sylArea: 'EE', sylFilter: 'all', openSections: {}, detailsOpen: {}, hasPreImport: false, banner: '',
 };
 
@@ -1604,7 +1738,7 @@ function parseHash() {
   if (v === 'q') return { view: 'q', id: parts[1] || null, stage: parts[2] || null, params };
   if (v === 'revision') return { view: 'revision', id: parts[1] || null, params };
   if (v === 'patterns') return { view: 'patterns', id: parts[1] || null, params };
-  if (['dashboard', 'syllabus', 'settings'].includes(v)) return { view: v, params };
+  if (['dashboard', 'syllabus', 'settings', 'pyq'].includes(v)) return { view: v, params };
   return { view: 'dashboard', params };
 }
 function go(hash) { if (location.hash === hash) rerender(); else location.hash = hash; }
@@ -1616,7 +1750,7 @@ const qLink = (id, stage) => `#/q/${encodeURIComponent(id)}${stage ? '/' + stage
 function renderNav() {
   const due = qList().filter(isDue).length;
   const items = [
-    ['dashboard', 'Dashboard', ''], ['q', 'Question Workspace', ''], ['syllabus', 'Syllabus Map', ''],
+    ['dashboard', 'Dashboard', ''], ['pyq', 'PYQ Tracker', ''], ['q', 'Question Workspace', ''], ['syllabus', 'Syllabus Map', ''],
     ['patterns', 'Pattern Library', ''], ['revision', 'Revision', due ? `<span class="count" aria-label="${due} due">${due}</span>` : ''], ['settings', 'Settings & Backup', ''],
   ];
   $('#nav').innerHTML = items.map(([v, label, extra]) => `<a href="#/${v}" ${UI.route.view === v ? 'aria-current="page"' : ''}><span>${label}</span>${extra}</a>`).join('');
@@ -1625,7 +1759,7 @@ function rerender() {
   UI.route = parseHash();
   renderNav();
   if (DataFile.gate) $('#nav').innerHTML = '';
-  const view = DataFile.gate ? viewGate : { dashboard: viewDashboard, q: viewWorkspace, syllabus: viewSyllabus, patterns: viewPatterns, revision: viewRevision, settings: viewSettings }[UI.route.view] || viewDashboard;
+  const view = DataFile.gate ? viewGate : { dashboard: viewDashboard, pyq: viewPYQ, q: viewWorkspace, syllabus: viewSyllabus, patterns: viewPatterns, revision: viewRevision, settings: viewSettings }[UI.route.view] || viewDashboard;
   const main = $('#main');
   const y = window.scrollY;
   const active = document.activeElement && document.activeElement.id;
@@ -1640,7 +1774,7 @@ function showBanner(msg) { UI.banner = msg; rerender(); }
    Shared bits
    --------------------------------------------------------------------- */
 function levelPill(q) { const l = questionLevel(q); return `<span class="pill l${l}" title="${esc(LEVELS[l].why)}">${LEVELS[l].label}</span>`; }
-function qName(q) { return q.title || (q.statement ? q.statement.split('\n')[0].slice(0, 70) : '') || 'Untitled question'; }
+function qName(q) { return q.title || (q.statement ? q.statement.split('\n')[0].slice(0, 70) : '') || q.pyq?.subtopic || q.pyq?.topic || 'Untitled question'; }
 function sourceShort(q) { const s = q.source || {}; return [s.type === 'GATE EE PYQ' ? 'PYQ' : s.type, s.year, s.questionNumber ? 'Q' + String(s.questionNumber).replace(/^Q/i, '') : ''].filter(Boolean).join(' '); }
 function choiceRow(name, opts, value, attrs = '', disabledSet = new Set()) {
   return `<div class="choices" role="group" aria-label="${esc(name)}">${opts.map(([v, l]) => `<button type="button" class="choice" data-act="choose" data-bind="${attrs}" data-value="${esc(v)}" aria-pressed="${value === v}" ${disabledSet.has(v) ? 'disabled' : ''}>${esc(l)}</button>`).join('')}</div>`;
@@ -1678,11 +1812,47 @@ function viewDashboard() {
       <button class="btn primary big" data-act="newQuestion">New question</button>
     </div>` : '';
 
+  const P = dailyPlan();
+  const end = dayEndAt();
+  const endLabel = end.toLocaleTimeString(undefined, { hour: 'numeric', minute: '2-digit' });
+  const streak = streakDays(), bestRun = bestStreak(), todayActive = !!S.activity[today];
+  const strip = Array.from({ length: 14 }, (_, i) => addDays(today, i - 13)).map(k => `<i class="${S.activity[k] ? 'on' : ''} ${k === today ? 'now' : ''}" title="${esc(fmtDay(k))}: ${S.activity[k] ? plural(S.activity[k], 'learning action') : 'no activity'}"></i>`).join('');
+  const goalBody = P.status === 'unset' ? `
+      <p class="small">Pick the date you want to finish all ${P.total} PYQs. The app splits what is left into a daily target.</p>
+      <label class="f">Finish all PYQs by<input type="date" data-setting="targetDate" min="${esc(today)}"></label>`
+    : P.status === 'passed' ? `
+      <p class="small">Your finish date (${esc(fmtDay(P.target))}) has passed with ${P.left} questions left. Set a new date to get a fresh daily target.</p>
+      <label class="f">New finish date<input type="date" data-setting="targetDate" min="${esc(today)}"></label>`
+    : `
+      <div class="plan-big"><span class="bigfig">${P.doneToday}<span class="of">/${P.perDay}</span></span><span class="small muted">questions today</span></div>
+      <div class="meter" style="margin:8px 0"><i style="width:${P.perDay ? Math.min(100, (P.doneToday / P.perDay) * 100) : 100}%;background:var(--live)"></i></div>
+      <p class="small" style="margin:0">${P.status === 'finished' ? '<b>All PYQs completed.</b>' : P.status === 'met' ? `<b>Today's target is done.</b> Anything extra lowers tomorrow's target.` : `<b>${plural(P.todayLeft, 'question')}</b> left for today.`}</p>`;
+  const planPanel = `
+  <div class="plan">
+    <section class="panel">
+      <h3>Today's target</h3>
+      ${goalBody}
+    </section>
+    <section class="panel">
+      <h3>Study day ends in</h3>
+      <div class="bigfig mono" data-dayend>${fmtCountdown(end - new Date())}</div>
+      <div class="meter" style="margin:8px 0" title="How much of the study day has passed"><i data-dayfill style="width:0;background:var(--amber)"></i></div>
+      <p class="small muted" style="margin:0">Day ends at ${esc(endLabel)}. Work before then counts for ${esc(fmtDay(today))}.</p>
+    </section>
+    <section class="panel">
+      <h3>Streak</h3>
+      <div class="bigfig">${streak} <span class="of">${streak === 1 ? 'day' : 'days'}</span></div>
+      <div class="streak" aria-label="Last 14 study days">${strip}</div>
+      <p class="small muted" style="margin:0">${todayActive ? 'Today is counted.' : streak ? `Do one learning action before ${esc(endLabel)} to keep it.` : 'Log an attempt, hint or revision to start one.'} Best: ${plural(bestRun, 'day')}.</p>
+    </section>
+  </div>
+  ${P.target && P.status !== 'passed' ? `<p class="small muted plan-line">${P.done} of ${P.total} PYQs completed · ${P.left} left · ${plural(P.daysLeft, 'study day')} until ${esc(fmtDay(P.target))} (including today) · <a href="#/settings">change date</a>. A question counts as completed on the day you log its first attempt.</p>` : ''}`;
   return `
   <div class="page-head">
     <div><h1>Today</h1><p>Study day ${esc(fmtDay(today))}, which began at ${pad(startH)}:00. ${S.activity[today] ? plural(S.activity[today], 'learning action') + ' recorded today' : 'Nothing recorded yet today'}${streakDays() > 1 ? `, ${streakDays()}-day streak` : ''}.</p></div>
-    <div class="row">${M.due ? `<a class="btn" href="#/revision">Review ${plural(M.due, 'due question')}</a>` : ''}<button class="btn primary big" data-act="newQuestion">New question</button></div>
+    <div class="row">${M.due ? `<a class="btn" href="#/revision">Review ${plural(M.due, 'due question')}</a>` : ''}<a class="btn big" href="#/pyq">PYQ Tracker</a><button class="btn primary big" data-act="newQuestion">Add PYQ</button></div>
   </div>
+  ${planPanel}
   ${hello}
   ${qs.length ? `
   <div class="today">
@@ -1778,13 +1948,14 @@ function filteredQuestions() {
   const s = UI.search.trim().toLowerCase();
   return qList().filter(q => {
     if (UI.topicFilter && !q.syllabusLinks.includes(UI.topicFilter)) return false;
+    if (UI.pyqFilter && !(pyqKey(...pyqPath(q)) + ' › ').startsWith(UI.pyqFilter + ' › ')) return false;
     const f = UI.listFilter, l = questionLevel(q);
     if (f === 'due' && !isDue(q)) return false;
     if (f === 'progress' && l >= 3) return false;
     if (f === 'help' && l !== 2) return false;
     if (f === 'indep' && l < 3) return false;
     if (!s) return true;
-    const hay = [q.id, q.title, q.statement, q.topicGuess, sourceLine(q), ...q.tags, ...q.concepts, q.takeaway, ...q.syllabusLinks.map(topicLabel)].join(' ').toLowerCase();
+    const hay = [q.id, q.title, q.statement, q.topicGuess, sourceLine(q), ...pyqPath(q), ...q.tags, ...q.concepts, q.takeaway, ...q.syllabusLinks.map(topicLabel)].join(' ').toLowerCase();
     return s.split(/\s+/).every(w => hay.includes(w));
   }).sort((a, b) => b.updatedAt.localeCompare(a.updatedAt));
 }
@@ -1795,10 +1966,11 @@ function renderQList(currentId) {
     <input type="search" id="qSearch" placeholder="Search ID, title, topic, notes" value="${esc(UI.search)}" aria-label="Search questions">
     ${selectEl('id="qFilter" aria-label="Filter questions"', [['all', 'All questions'], ['progress', 'Not yet solved on my own'], ['help', 'Solved with help'], ['indep', 'Solved independently'], ['due', 'Due for revision']], UI.listFilter)}
     ${UI.topicFilter ? `<div class="note small">Topic: ${esc(topicLabel(UI.topicFilter))} <button class="btn ghost small" data-act="clearTopicFilter">Clear</button></div>` : ''}
+    ${UI.pyqFilter ? `<div class="note small">PYQ: ${esc(UI.pyqFilter)} <button class="btn ghost small" data-act="clearPyqFilter">Clear</button></div>` : ''}
     <div class="items" role="list">
       ${list.length ? list.map(q => `<a role="listitem" class="qitem" href="${qLink(q.id)}" ${q.id === currentId ? 'aria-current="true"' : ''}>
         <span class="t">${esc(qName(q))}</span>
-        <span class="m"><span class="qid">${esc(q.id)}</span>${sourceShort(q) ? `<span>${esc(sourceShort(q))}</span>` : ''}${levelPill(q)}${isDue(q) ? '<span class="pill due">due</span>' : ''}</span>
+        <span class="m"><span class="qid">${esc(q.id)}</span>${sourceShort(q) ? `<span>${esc(sourceShort(q))}</span>` : ''}${q.pyq.subject ? `<span>${esc(PORTAL_SHORT[q.pyq.subject] || q.pyq.subject)}</span>` : ''}${levelPill(q)}${isDue(q) ? '<span class="pill due">due</span>' : ''}</span>
       </a>`).join('') : `<div class="empty" style="padding:16px"><p>${qList().length ? 'No question matches this search or filter.' : 'No questions yet.'}</p></div>`}
     </div>
     <p class="small muted">${plural(list.length, 'question')} shown</p>
@@ -1808,6 +1980,7 @@ function renderQList(currentId) {
 function viewWorkspace() {
   const r = UI.route;
   if (r.params?.topic) UI.topicFilter = r.params.topic;
+  if (r.params?.pyq) UI.pyqFilter = r.params.pyq;
   const q = r.id ? getQ(r.id) : null;
   if (r.id && !q) return `<div class="ws">${renderQList(null)}<div class="wsmain panel"><h2>${esc(r.id)} doesn’t exist</h2><p>It may have been deleted or not imported yet.</p><a class="btn" href="#/q">Back to all questions</a></div></div>`;
   if (!q) {
@@ -1825,7 +1998,7 @@ function viewWorkspace() {
     <a class="btn ghost small" href="#/q" style="margin-bottom:6px">All questions</a>
     <div class="qhead">
       <div style="flex:1;min-width:240px">
-        <div class="row"><span class="qid">${esc(q.id)}</span>${sourceShort(q) ? `<span class="tag">${esc(sourceShort(q))}</span>` : ''}${levelPill(q)}${isDue(q) ? '<span class="pill due">revision due</span>' : ''}${q.relearn ? '<span class="pill bad" title="Two weak revisions in a row">faded in revision</span>' : ''}</div>
+        <div class="row"><span class="qid">${esc(q.id)}</span>${sourceShort(q) ? `<span class="tag">${esc(sourceShort(q))}</span>` : ''}${pyqPath(q).length ? `<a class="tag" href="#/q?pyq=${encodeURIComponent(pyqKey(...pyqPath(q)))}" title="${esc(pyqKey(...pyqPath(q)))}">${esc(pyqPath(q).slice(-1)[0])}</a>` : ''}${levelPill(q)}${isDue(q) ? '<span class="pill due">revision due</span>' : ''}${q.relearn ? '<span class="pill bad" title="Two weak revisions in a row">faded in revision</span>' : ''}</div>
         <input class="title" type="text" data-qfield="title" value="${esc(q.title)}" placeholder="Untitled — add a short name (optional)" aria-label="Question title">
       </div>
       <div class="row"><button class="btn small" data-act="exportOne" data-id="${esc(q.id)}">Export this question</button></div>
@@ -1850,8 +2023,13 @@ function renderDetails(q) {
   const open = UI.detailsOpen[q.id];
   const s = q.source;
   return `<details class="fold panel" ${open ? 'open' : ''} data-details="${esc(q.id)}" style="padding:10px 16px">
-    <summary>Details <span class="muted small" style="font-weight:400">— source, format, syllabus links (${q.syllabusLinks.length}), all optional</span></summary>
+    <summary>Details <span class="muted small" style="font-weight:400">— PYQ topic, source, format, syllabus links (${q.syllabusLinks.length}), all optional</span></summary>
     <div class="stack" style="margin-top:10px">
+      <div class="grid3">
+        <label class="f">PYQ subject${selectEl('data-qfield="pyq.subject"', PORTAL.map(x => [x[0], x[0]]), q.pyq.subject, 'Not set')}</label>
+        <label class="f">PYQ topic${selectEl('data-qfield="pyq.topic"', (portalSubject(q.pyq.subject)?.[2] || []).map(x => [x[0], x[0]]), q.pyq.topic, q.pyq.subject ? 'Choose topic' : 'Pick a subject first')}</label>
+        <label class="f">PYQ sub-topic${selectEl('data-qfield="pyq.subtopic"', (portalTopic(q.pyq.subject, q.pyq.topic)?.[2] || []).map(x => [x[0], x[0]]), q.pyq.subtopic, q.pyq.topic ? 'Choose sub-topic' : 'Pick a topic first')}</label>
+      </div>
       <div class="grid3">
         <label class="f">Source${selectEl('data-qfield="source.type"', SOURCE_TYPES.map(t => [t, t]), s.type)}</label>
         <label class="f">Year<input type="number" data-qfield="source.year" value="${esc(s.year ?? '')}" placeholder="e.g. 2019"></label>
@@ -2130,6 +2308,169 @@ function stageHistory(q) {
 /* ---------------------------------------------------------------------
    Syllabus map
    --------------------------------------------------------------------- */
+/* ---------------------------------------------------------------------
+   PYQ Tracker — the ExamDost portal's Subject › Topic › Sub-topic table,
+   with your own Added / Attempted / Solved counts and a one-tap Add.
+   --------------------------------------------------------------------- */
+function pyqStats() {
+  const m = {};
+  const bump = (k, q) => {
+    const e = m[k] || (m[k] = { added: 0, attempted: 0, solved: 0 });
+    e.added++;
+    if (q.attempts.length) e.attempted++;
+    if (q.attempts.some(isSolved)) e.solved++;
+  };
+  for (const q of qList()) {
+    const p = pyqPath(q); if (!p.length) continue;
+    bump('ALL', q);
+    for (let i = 1; i <= p.length; i++) bump(pyqKey(...p.slice(0, i)), q);
+  }
+  return k => m[k] || { added: 0, attempted: 0, solved: 0 };
+}
+function viewPYQ() {
+  const st = pyqStats(), all = st('ALL');
+  const open = k => UI.openSections['pyq:' + k] ? 'open' : '';
+  const cells = (key, n) => {
+    const e = st(key);
+    return `<span class="n">${n}</span>
+      <span class="n">${e.added ? `<a href="#/q?pyq=${encodeURIComponent(key)}" title="Show these questions">${e.added}</a>` : '<span class="z">0</span>'}</span>
+      <span class="n">${e.attempted || '<span class="z">0</span>'}</span>
+      <span class="n">${e.solved ? `<b class="ok">${e.solved}</b>` : '<span class="z">0</span>'}</span>`;
+  };
+  const add = (s, t = '', u = '') => `<button class="btn small pyq-add" data-act="newQuestion" data-s="${esc(s)}" data-t="${esc(t)}" data-u="${esc(u)}" aria-label="Add a question to ${esc(pyqKey(s, t, u))}">+ Add</button>`;
+  const bar = (key, n) => { const e = st(key); return `<span class="meter pyq-meter" aria-hidden="true"><i style="width:${n ? Math.min(100, (e.attempted / n) * 100) : 0}%;background:var(--blue)"></i></span>`; };
+  const subjects = PORTAL.map(([s, n, topics]) => `
+    <details class="pyq-subj" data-sec="pyq:${esc(s)}" ${open(s)}>
+      <summary class="pyq-row lvl0"><span class="nm"><span class="tw" aria-hidden="true"></span>${esc(s)}${bar(s, n)}</span>${cells(s, n)}<span class="act">${add(s)}</span></summary>
+      <div class="pyq-topics">
+        ${topics.map(([t, tn, subs]) => { const k = pyqKey(s, t); return `
+        <details class="pyq-topic" data-sec="pyq:${esc(k)}" ${open(k)}>
+          <summary class="pyq-row lvl1"><span class="nm"><span class="tw" aria-hidden="true"></span>${esc(t)} <span class="cnt">${plural(subs.length, 'sub-topic')}</span></span>${cells(k, tn)}<span class="act">${add(s, t, subs.length === 1 ? subs[0][0] : '')}</span></summary>
+          <div class="pyq-subs">
+            ${subs.map(([u, un]) => { const k2 = pyqKey(s, t, u); return `<div class="pyq-row lvl2"><span class="nm">${esc(u)}</span>${cells(k2, un)}<span class="act">${add(s, t, u)}</span></div>`; }).join('')}
+          </div>
+        </details>`; }).join('')}
+      </div>
+    </details>`).join('');
+  return `
+  <div class="page-head">
+    <div><h1>PYQ Tracker</h1><p>Same Subject › Topic › Sub-topic layout as the ${esc(PORTAL_NAME)} portal. Press <b>+ Add</b> on the row you are practising, and the question form opens with that sub-topic already picked. Saving takes you straight to the question in the workspace.</p></div>
+    <div class="row"><button class="btn" data-act="pyqFold" data-open="">Collapse all</button><button class="btn" data-act="pyqFold" data-open="1">Expand all</button><button class="btn primary big" data-act="newQuestion">Add PYQ</button></div>
+  </div>
+  <div class="pyq-sum">
+    <div><span class="lbl">Total questions</span><span class="v">${PORTAL_TOTAL}</span></div>
+    <div><span class="lbl">Added here</span><span class="v">${all.added}</span></div>
+    <div><span class="lbl">Attempted</span><span class="v">${all.attempted}</span></div>
+    <div><span class="lbl">% attempted</span><span class="v">${pct(all.attempted, PORTAL_TOTAL)}</span></div>
+    <div><span class="lbl">Solved</span><span class="v">${all.solved}</span></div>
+  </div>
+  <div class="scroll-x"><div class="pyq">
+    <div class="pyq-row pyq-head"><span>Topic</span><span class="n">Questions</span><span class="n">Added</span><span class="n">Attempted</span><span class="n">Solved</span><span></span></div>
+    ${subjects}
+  </div></div>
+  <p class="small muted" style="margin-top:10px">Questions = the portal’s count. Added = questions you saved here. Attempted = at least one attempt logged. Solved = at least one attempt marked “Solved it”.</p>`;
+}
+
+/* ---------- quick add: the fast question form ---------- */
+const GATE_SETS = { 2014: 3, 2015: 2, 2016: 2 };
+function qaFill(qa) {
+  const s = portalSubject(qa.subject);
+  if (s && s[2].length === 1 && !qa.topic) qa.topic = s[2][0][0];
+  const t = portalTopic(qa.subject, qa.topic);
+  if (t && t[2].length === 1) qa.subtopic = t[2][0][0];
+  return qa;
+}
+function qaDefaults(pre = {}) {
+  const last = S.settings.lastPyq || {};
+  const qa = { find: '', subject: last.subject || '', topic: last.topic || '', subtopic: last.subtopic || '', year: '', set: '', qno: '', qType: '', marks: '', answer: '', note: '' };
+  if (pre.subject) Object.assign(qa, { subject: pre.subject, topic: pre.topic || '', subtopic: pre.subtopic || '' });
+  return qaFill(qa);
+}
+function qaFindResults() {
+  const f = (UI.qa?.find || '').trim().toLowerCase();
+  if (!f) return '';
+  const words = f.split(/\s+/);
+  const hits = PORTAL_FLAT.filter(x => { const h = (x.subtopic + ' ' + x.topic + ' ' + x.subject).toLowerCase(); return words.every(w => h.includes(w)); })
+    .sort((a, b) => (b.subtopic.toLowerCase().includes(words[0]) - a.subtopic.toLowerCase().includes(words[0])))
+    .slice(0, 8);
+  if (!hits.length) return '<p class="small muted">No sub-topic matches.</p>';
+  return hits.map((x, i) => `<button type="button" class="qa-hit" data-act="qaPick" data-s="${esc(x.subject)}" data-t="${esc(x.topic)}" data-u="${esc(x.subtopic)}">${i === 0 ? '<span class="kbd">Enter</span>' : ''}<b>${esc(x.subtopic)}</b><span class="muted small">${esc(x.subject)} › ${esc(x.topic)}</span></button>`).join('');
+}
+function qaDuplicate() {
+  const qa = UI.qa; const y = parseInt(qa.year, 10); const n = String(qa.qno || '').trim().replace(/^q/i, '');
+  if (!y || !n) return null;
+  return qList().find(q => q.source.year === y && String(q.source.questionNumber).replace(/^q/i, '') === n && (!qa.set || (q.source.reference || '').endsWith('Set ' + qa.set))) || null;
+}
+function qaWarn() {
+  const d = qaDuplicate();
+  return d ? `<div class="note warn small">GATE ${esc(d.source.year)} Q${esc(d.source.questionNumber)} is already saved as <a href="${qLink(d.id)}">${esc(d.id)}</a>${d.pyq.subtopic ? ` (${esc(d.pyq.subtopic)})` : ''}. Saving again makes a second record.</div>` : '';
+}
+function qaChips(field, opts, value) {
+  return `<div class="choices" role="group">${opts.map(([v, l, extra]) => `<button type="button" class="choice" data-act="qaSet" data-f="${field}" data-v="${esc(v)}" aria-pressed="${String(value) === String(v)}">${esc(l)}${extra ? ` <span class="cnt">${extra}</span>` : ''}</button>`).join('')}</div>`;
+}
+function qaSeg(field, opts, value) {
+  return `<div class="seg" role="group">${opts.map(([v, l]) => `<button type="button" data-act="qaSet" data-f="${field}" data-v="${esc(v)}" aria-pressed="${String(value) === String(v)}">${esc(l)}</button>`).join('')}</div>`;
+}
+function renderQuickAdd(focus) {
+  const qa = UI.qa; if (!qa) return;
+  const st = pyqStats();
+  const subj = portalSubject(qa.subject), top = portalTopic(qa.subject, qa.topic);
+  const years = []; for (let y = 2026; y >= 2007; y--) years.push([y, String(y)]);
+  const path = pyqPath({ pyq: qa });
+  const done = qa.subtopic || (top && !top[2].length);
+  $('#modalBody').innerHTML = `<div id="qaForm" class="stack qa">
+    <div class="qa-find">
+      <input type="search" id="qaFind" data-qa="find" value="${esc(qa.find)}" placeholder="Jump to a sub-topic: type thev, swing, bode, z-trans…" autocomplete="off" aria-label="Find a sub-topic">
+      <div id="qaFindRes" class="qa-res">${qaFindResults()}</div>
+    </div>
+    <div class="qa-path ${done ? 'ok' : ''}">${path.length ? path.map(esc).join(' <span class="muted">›</span> ') : '<span class="muted">No sub-topic picked. Tap below or search above.</span>'}${path.length ? `<span class="spacer"></span><button type="button" class="btn ghost small" data-act="qaSet" data-f="topic" data-v="${''}">Change topic</button><button type="button" class="btn ghost small" data-act="qaSet" data-f="subject" data-v="">Change subject</button>` : ''}</div>
+    ${!qa.subject ? `<div class="qa-sec"><div class="qa-lbl">Subject</div>${qaChips('subject', PORTAL.map(s => [s[0], PORTAL_SHORT[s[0]] || s[0], st(s[0]).added ? st(s[0]).added + '/' + s[1] : s[1]]), qa.subject)}</div>` : ''}
+    ${subj && !done ? `<div class="qa-sec"><div class="qa-lbl">Topic in ${esc(qa.subject)}</div>${qaChips('topic', subj[2].map(t => [t[0], t[0], t[1]]), qa.topic)}</div>` : ''}
+    ${top && top[2].length > 1 && !qa.subtopic ? `<div class="qa-sec"><div class="qa-lbl">Sub-topic in ${esc(qa.topic)}</div>${qaChips('subtopic', top[2].map(u => [u[0], u[0], st(pyqKey(qa.subject, qa.topic, u[0])).added + '/' + u[1]]), qa.subtopic)}</div>` : ''}
+    ${top && top[2].length > 1 && qa.subtopic ? `<div class="qa-sec"><div class="qa-lbl">Same topic, other sub-topics</div>${qaChips('subtopic', top[2].map(u => [u[0], u[0]]), qa.subtopic)}</div>` : ''}
+    <div class="qa-sec"><div class="qa-lbl">GATE year</div>
+      <div class="row" style="align-items:flex-start">${qaChips('year', years, qa.year)}<input type="number" id="qaYear" data-qa="year" value="${esc(qa.year)}" placeholder="Other" min="1991" max="2030" style="width:90px" aria-label="Year"></div>
+    </div>
+    ${GATE_SETS[qa.year] ? `<div class="qa-sec"><div class="qa-lbl">Set</div>${qaSeg('set', Array.from({ length: GATE_SETS[qa.year] }, (_, i) => [String(i + 1), 'Set ' + (i + 1)]), qa.set)}</div>` : ''}
+    <div class="qa-line">
+      <label class="f">Q no.<input type="text" inputmode="numeric" id="qaNo" data-qa="qno" value="${esc(qa.qno)}" placeholder="e.g. 23"></label>
+      <div class="f"><span>Type</span>${qaSeg('qType', [['MCQ', 'MCQ'], ['MSQ', 'MSQ'], ['NAT', 'NAT']], qa.qType)}</div>
+      <div class="f"><span>Marks</span>${qaSeg('marks', [['1', '1'], ['2', '2']], qa.marks)}</div>
+    </div>
+    <div class="grid2">
+      <label class="f"><span>Answer key <span class="muted" style="font-weight:400">(optional)</span></span><input type="text" id="qaAns" data-qa="answer" value="${esc(qa.answer)}" placeholder="(B)  or  2.5 to 2.7"></label>
+      <label class="f"><span>One-line note <span class="muted" style="font-weight:400">(optional)</span></span><input type="text" id="qaNote" data-qa="note" value="${esc(qa.note)}" placeholder="e.g. RLC series, find Q factor"></label>
+    </div>
+    <div id="qaWarn">${qaWarn()}</div>
+  </div>`;
+  $('#modalFoot').innerHTML = `<span class="spacer small muted qa-keys"><span class="kbd">Enter</span> save &amp; open in workspace · <span class="kbd">Ctrl</span>+<span class="kbd">Enter</span> save &amp; add another${UI.qaCount ? ` · <b>${UI.qaCount}</b> added now` : ''}</span>
+    <button class="btn" data-act="qaSave">Save &amp; add another</button>
+    <button class="btn primary" data-act="qaSave" data-open="1">Save &amp; open</button>`;
+  const f = focus && document.getElementById(focus);
+  if (f) { f.focus({ preventScroll: true }); if (f.select && f.type !== 'search') f.select(); }
+}
+function qaSave(openAfter) {
+  const qa = UI.qa; if (!qa) return;
+  const year = parseInt(qa.year, 10) || null;
+  const qno = String(qa.qno || '').trim().replace(/^q/i, '');
+  const q = createQuestion({
+    source: { type: 'GATE EE PYQ', year, questionNumber: qno, reference: year ? `GATE EE ${year}${qa.set ? ' Set ' + qa.set : ''}` : '' },
+    pyq: { subject: qa.subject, topic: qa.topic, subtopic: qa.subtopic },
+    qType: qa.qType, marks: qa.marks ? +qa.marks : null,
+    officialAnswer: qa.answer.trim(), statement: qa.note.trim(),
+  });
+  S.settings.lastPyq = { subject: qa.subject, topic: qa.topic, subtopic: qa.subtopic };
+  bumpActivity(0);
+  commit({ render: false });
+  UI.qaCount++;
+  const where = qa.subtopic ? ` in ${qa.subtopic}` : '';
+  if (openAfter) { UI.qa = null; closeModal(); toast(`${q.id} saved${where}.`); go(qLink(q.id, 'learn')); return; }
+  toast(`${q.id} saved${where}. Ready for the next one.`);
+  Object.assign(qa, { year: '', set: '', qno: '', qType: '', marks: '', answer: '', note: '', find: '' });
+  rerender();
+  renderQuickAdd('qaYear');
+}
+
 function viewSyllabus() {
   const syl = activeSyllabus();
   const stats = topicStats();
@@ -2354,6 +2695,7 @@ function viewSettings() {
       <label class="f">Study day starts at${selectEl('data-setting="dayStartHour"', Array.from({ length: 13 }, (_, h) => [String(h), `${pad(h)}:00`]), String(S.settings.dayStartHour))}</label>
       <label class="f">Revision ladder (days)<input type="text" data-setting="intervals" value="${esc(S.settings.intervals.join(', '))}"></label>
       <label class="f">Maintenance gap after the ladder (days)<input type="number" min="14" data-setting="maintenanceDays" value="${esc(S.settings.maintenanceDays)}"></label>
+      <label class="f">Finish all ${PORTAL_TOTAL} PYQs by<input type="date" data-setting="targetDate" value="${esc(S.settings.targetDate || '')}" min="${esc(dayKey())}"></label>
       <label class="f">Target marks<input type="number" min="1" max="100" data-setting="targetMarks" value="${esc(S.settings.targetMarks)}"></label>
       <label class="f">Theme${selectEl('data-setting="theme"', [['auto', 'Follow the system'], ['light', 'Light'], ['dark', 'Dark']], S.settings.theme)}</label>
     </div>
@@ -2526,7 +2868,14 @@ function doMerge(v, policy) {
 /* ---------------------------------------------------------------------
    Timers
    --------------------------------------------------------------------- */
+let _tickDay = null;
 function tickTimers() {
+  const now = new Date(), end = dayEndAt(now);
+  $$('[data-dayend]').forEach(el => { el.textContent = fmtCountdown(end - now); });
+  $$('[data-dayfill]').forEach(el => { el.style.width = (100 - ((end - now) / 864e5) * 100).toFixed(2) + '%'; });
+  const k = dayKey();
+  if (_tickDay && _tickDay !== k && UI.route.view === 'dashboard' && !DataFile.gate) { _tickDay = k; rerender(); toast('A new study day has started.'); return; }
+  _tickDay = k;
   $$('[data-timer-start]').forEach(el => {
     const s = Math.max(0, Math.floor((Date.now() - Date.parse(el.dataset.timerStart)) / 1000));
     el.textContent = `${pad(Math.floor(s / 60))}:${pad(s % 60)}`;
@@ -2541,13 +2890,38 @@ function stageGo(q, stage) { q.currentStage = stage; commit({ render: false }); 
 
 const ACT = {
   dismissBanner() { UI.banner = ''; rerender(); },
-  newQuestion() {
-    const q = createQuestion();
-    bumpActivity(0);
-    commit({ render: false });
-    toast(`${q.id} created. Take a screenshot of the question, then generate the concept prompt.`);
-    go(qLink(q.id, 'learn'));
+  newQuestion(el) {
+    const d = (el && el.dataset) || {};
+    UI.qa = qaDefaults({ subject: d.s, topic: d.t, subtopic: d.u });
+    UI.qaCount = 0;
+    openModal('Add a PYQ', '', '');
+    renderQuickAdd(UI.qa.subtopic ? 'qaYear' : 'qaFind');
   },
+  qaSet(el) {
+    const qa = UI.qa; if (!qa) return;
+    const f = el.dataset.f, v = el.dataset.v;
+    let focus = null;
+    if (f === 'subject') { qa.subject = v; qa.topic = ''; qa.subtopic = ''; qaFill(qa); focus = v ? null : 'qaFind'; }
+    else if (f === 'topic') { qa.topic = v; qa.subtopic = ''; qaFill(qa); }
+    else if (f === 'subtopic') qa.subtopic = v;
+    else if (f === 'year') { qa.year = qa.year === v ? '' : v; qa.set = ''; focus = GATE_SETS[qa.year] ? null : 'qaNo'; }
+    else qa[f] = qa[f] === v ? '' : v;
+    if (['subject', 'topic', 'subtopic'].includes(f) && qa.subtopic) focus = 'qaYear';
+    if (f === 'set') focus = 'qaNo';
+    renderQuickAdd(focus);
+  },
+  qaPick(el) {
+    const qa = UI.qa; if (!qa) return;
+    Object.assign(qa, { subject: el.dataset.s, topic: el.dataset.t, subtopic: el.dataset.u, find: '' });
+    renderQuickAdd('qaYear');
+  },
+  qaSave(el) { qaSave(!!el.dataset.open); },
+  pyqFold(el) {
+    const on = !!el.dataset.open;
+    for (const [s, , ts] of PORTAL) { UI.openSections['pyq:' + s] = on; for (const [t] of ts) UI.openSections['pyq:' + pyqKey(s, t)] = on; }
+    rerender();
+  },
+  clearPyqFilter() { UI.pyqFilter = ''; go('#/q' + (UI.route.id ? '/' + UI.route.id : '')); },
   stage(el) { const q = getQ(el.dataset.id); if (q) stageGo(q, el.dataset.stage); },
   goNext(el) {
     const q = getQ(el.dataset.id); if (!q) return;
@@ -2826,6 +3200,13 @@ document.addEventListener('input', e => {
   if (ds.vnote) { const q = getQ(ds.qid); const v = q && q.variations.find(x => x.id === ds.vnote); if (v) { v.notes = t.value; touch(q); draftSave(); } return; }
   if (ds.ab) { const [qid, mode, field] = ds.ab.split('|'); const d = UI.attempt[qid + '|' + mode]; if (d && field !== 'kind') d[field] = t.value; return; }
   if (ds.rb) { const [qid, field] = ds.rb.split('|'); const d = UI.review[qid]; if (d) d[field] = t.value; return; }
+  if (ds.qa && UI.qa) {
+    UI.qa[ds.qa] = t.value;
+    if (ds.qa === 'find') { const r = $('#qaFindRes'); if (r) r.innerHTML = qaFindResults(); }
+    if (ds.qa === 'year') { const had = !!GATE_SETS[t.dataset.prev]; t.dataset.prev = t.value; $$('[data-f="year"]').forEach(b => b.setAttribute('aria-pressed', String(b.dataset.v === t.value))); if (had !== !!GATE_SETS[t.value] && String(t.value).length === 4) { UI.qa.set = ''; renderQuickAdd('qaYear'); } }
+    const w = $('#qaWarn'); if (w) w.innerHTML = qaWarn();
+    return;
+  }
   if (ds.pickfilter !== undefined) {
     const f = t.value.trim().toLowerCase(); const box = t.parentElement;
     $$('.pk-item', box).forEach(l => { l.style.display = !f || f.split(/\s+/).every(w => l.dataset.pkText.includes(w)) ? '' : 'none'; });
@@ -2839,6 +3220,13 @@ document.addEventListener('change', e => {
   if (ds.qfield) {
     const q = getQ(UI.route.id); if (!q) return;
     let v = t.value;
+    if (ds.qfield.startsWith('pyq.')) {
+      const f = ds.qfield.slice(4);
+      q.pyq[f] = v;
+      if (f === 'subject') { q.pyq.topic = ''; q.pyq.subtopic = ''; }
+      if (f === 'topic') { q.pyq.subtopic = ''; const subs = portalTopic(q.pyq.subject, v)?.[2] || []; if (subs.length === 1) q.pyq.subtopic = subs[0][0]; }
+      touch(q); commit(); return;
+    }
     if (['tags', 'concepts'].includes(ds.qfield)) v = v.split(',').map(x => x.trim()).filter(Boolean);
     if (ds.qfield === 'source.year') v = v ? parseInt(v, 10) || null : null;
     if (ds.qfield === 'marks') v = v ? +v : null;
@@ -2869,6 +3257,9 @@ document.addEventListener('change', e => {
       const arr = v.split(/[,\s]+/).map(Number).filter(n => Number.isFinite(n) && n >= 1);
       if (!arr.length || arr.some((n, i) => i && n < arr[i - 1])) { toast('Use increasing whole days, e.g. 1, 3, 7, 21, 45.', true); rerender(); return; }
       v = arr.map(n => Math.round(n));
+    } else if (k === 'targetDate') {
+      if (v && !/^\d{4}-\d{2}-\d{2}$/.test(v)) { toast('Pick a valid date.', true); return; }
+      if (v && v < dayKey()) { toast('Pick today or a later date.', true); rerender(); return; }
     } else if (['dayStartHour', 'maintenanceDays', 'targetMarks'].includes(k)) {
       v = Number(v); if (!Number.isFinite(v)) { toast('Enter a number.', true); return; }
       if (k === 'targetMarks') v = Math.max(1, Math.min(100, v));
@@ -2897,6 +3288,15 @@ document.addEventListener('change', e => {
     reader.onerror = () => toast('Could not read the file.', true);
     reader.readAsText(f);
   }
+});
+/* Quick add: Enter saves and opens the question in the workspace; Ctrl/Cmd+Enter saves and keeps the form open. */
+document.addEventListener('keydown', e => {
+  if (e.key !== 'Enter' || e.isComposing || !$('#qaForm') || !$('#modal').open) return;
+  const t = e.target, mod = e.ctrlKey || e.metaKey;
+  if (t.tagName === 'BUTTON' && !mod) return;
+  e.preventDefault();
+  if (t.id === 'qaFind' && !mod) { const b = $('#qaFindRes [data-act="qaPick"]'); if (b) b.click(); return; }
+  qaSave(!mod);
 });
 document.addEventListener('toggle', e => {
   const t = e.target;
