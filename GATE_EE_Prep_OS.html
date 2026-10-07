@@ -98,7 +98,7 @@ main{min-width:0; padding:28px 32px 80px}
 .stack{display:flex; flex-direction:column; gap:10px}
 .spacer{flex:1}
 label.f{display:flex; flex-direction:column; gap:4px; font-size:13px; font-weight:500; color:var(--ink2)}
-input[type=text],input[type=number],input[type=search],input[type=date],select,textarea{border:1px solid var(--line); border-radius:var(--r-s); background:var(--panel); padding:7px 10px; width:100%; min-width:0}
+input[type=text],input[type=url],input[type=number],input[type=search],input[type=date],select,textarea{border:1px solid var(--line); border-radius:var(--r-s); background:var(--panel); padding:7px 10px; width:100%; min-width:0}
 textarea{resize:vertical; line-height:1.5}
 textarea.prompt{font-family:var(--mono); font-size:12.5px; background:var(--sunk); min-height:220px}
 input:focus,select:focus,textarea:focus{border-color:var(--live); outline:none; box-shadow:0 0 0 3px var(--live-soft)}
@@ -643,7 +643,7 @@ function emptyState() {
 
 function normQuestion(q) {
   const base = {
-    id: '', title: '', statement: '', topicGuess: '', officialAnswer: '',
+    id: '', title: '', statement: '', topicGuess: '', officialAnswer: '', chatUrl: '',
     source: { type: 'GATE EE PYQ', year: null, questionNumber: '', reference: '' },
     pyq: { subject: '', topic: '', subtopic: '' },
     qType: '', marks: null,
@@ -1781,7 +1781,7 @@ function renderReply(text) {
    --------------------------------------------------------------------- */
 const UI = {
   route: { view: 'dashboard' }, search: '', listFilter: 'all', topicFilter: null,
-  prompts: {}, helpTab: {}, showEarly: {}, attempt: {}, review: {}, justSaved: {},
+  prompts: {}, helpTab: {}, showEarly: {}, attempt: {}, review: {}, justSaved: {}, editReply: {},
   pyqFilter: '', qa: null, qaCount: 0,
   patSearch: '', patSection: '', sylArea: 'EE', sylFilter: 'all', openSections: {}, detailsOpen: {}, hasPreImport: false, banner: '',
 };
@@ -1841,6 +1841,43 @@ function selectEl(bindAttr, opts, value, placeholder) {
 }
 function openLLMLinks() {
   return `<a class="btn ghost small" href="https://chatgpt.com/" target="_blank" rel="noopener">Open ChatGPT</a><a class="btn ghost small" href="https://claude.ai/new" target="_blank" rel="noopener">Open Claude</a><a class="btn ghost small" href="https://gemini.google.com/app" target="_blank" rel="noopener">Open Gemini</a>`;
+}
+/* ---------- per-question AI chat link ---------- */
+function safeUrl(u) { return /^https?:\/\//i.test(String(u || '').trim()) ? String(u).trim() : ''; }
+function chatHost(u) {
+  try {
+    const h = new URL(u).hostname.replace(/^www\./, '');
+    if (/chatgpt\.com|openai\.com/.test(h)) return 'ChatGPT';
+    if (/claude\.ai/.test(h)) return 'Claude';
+    if (/gemini\.google\.com/.test(h)) return 'Gemini';
+    return h;
+  } catch { return 'AI'; }
+}
+function chatRow(q) {
+  const u = safeUrl(q.chatUrl);
+  return `<div class="row" style="margin-top:6px">
+    <input type="url" data-chaturl="${esc(q.id)}" value="${esc(q.chatUrl || '')}" placeholder="AI chat link for this question (paste it after your first prompt)" aria-label="AI chat link for this question" style="flex:1;min-width:220px">
+    ${u ? `<a class="btn small primary" href="${esc(u)}" target="_blank" rel="noopener">Open ${esc(chatHost(u))} chat</a>` : '<span class="small muted">Saved when you click away.</span>'}
+  </div>`;
+}
+function chatButtons(q) {
+  const u = safeUrl(q.chatUrl);
+  if (u) return `<a class="btn small" href="${esc(u)}" target="_blank" rel="noopener">Open ${esc(q.id)} chat (${esc(chatHost(u))})</a>`;
+  return `${openLLMLinks()}<span class="small muted">After starting a new chat, paste its link under the question title.</span>`;
+}
+/* ---------- editing a saved reply ---------- */
+const snapReply = i => ({ at: nowISO(), response: i.response, verdict: i.verdict || '', takeaway: i.takeaway || '', followUp: i.followUp || '' });
+function replyEditor(q, i) {
+  const d = UI.editReply[i.id];
+  return `<div class="stack" style="margin-top:8px">
+    <label class="f">Reply text<textarea rows="14" id="edit-resp-${esc(i.id)}" data-ed="${esc(i.id)}|response">${esc(d.response)}</textarea></label>
+    ${i.task === 'evaluate' ? `<label class="f">Verdict the tutor gave${selectEl(`data-ed="${esc(i.id)}|verdict"`, VERDICTS, d.verdict, 'Choose the verdict')}</label>` : ''}
+    <div class="grid2">
+      <label class="f">My takeaway in one line<input type="text" data-ed="${esc(i.id)}|takeaway" value="${esc(d.takeaway)}"></label>
+      ${['diagnose', 'theory', 'evaluate'].includes(i.task) ? `<label class="f">Follow-up action<input type="text" data-ed="${esc(i.id)}|followUp" value="${esc(d.followUp)}"></label>` : ''}
+    </div>
+    <div class="row"><button class="btn primary" data-act="saveReplyEdit" data-id="${esc(q.id)}" data-iid="${esc(i.id)}">Save changes</button><button class="btn" data-act="cancelReplyEdit" data-iid="${esc(i.id)}">Cancel</button><span class="small muted">The current text is kept under “Earlier versions”.</span></div>
+  </div>`;
 }
 function getUI(map, key, init) { if (!map[key]) map[key] = typeof init === 'function' ? init() : { ...init }; return map[key]; }
 
@@ -2061,6 +2098,7 @@ function viewWorkspace() {
       <div style="flex:1;min-width:240px">
         <div class="row"><span class="qid">${esc(q.id)}</span>${sourceShort(q) ? `<span class="tag">${esc(sourceShort(q))}</span>` : ''}${pyqPath(q).length ? `<a class="tag" href="#/q?pyq=${encodeURIComponent(pyqKey(...pyqPath(q)))}" title="${esc(pyqKey(...pyqPath(q)))}">${esc(pyqPath(q).slice(-1)[0])}</a>` : ''}${levelPill(q)}${isDue(q) ? '<span class="pill due">revision due</span>' : ''}${q.relearn ? '<span class="pill bad" title="Two weak revisions in a row">faded in revision</span>' : ''}</div>
         <input class="title" type="text" data-qfield="title" value="${esc(q.title)}" placeholder="Untitled — add a short name (optional)" aria-label="Question title">
+        ${chatRow(q)}
       </div>
       <div class="row"><button class="btn small" data-act="exportOne" data-id="${esc(q.id)}">Export this question</button></div>
     </div>
@@ -2168,7 +2206,7 @@ function taskBox(q, task, { locked = '', extraLabel = 'Extra context for this pr
       </div>
       ${inter ? `
         <label class="f">Prompt — edit freely before copying<textarea class="prompt" id="prompt-${inter.id}" data-iprompt="${inter.id}" data-qid="${esc(q.id)}" rows="12">${esc(inter.prompt)}</textarea></label>
-        <div class="row"><button class="btn primary big" data-act="copy" data-id="${esc(q.id)}" data-iid="${inter.id}">Copy prompt</button>${openLLMLinks()}</div>
+        <div class="row"><button class="btn primary big" data-act="copy" data-id="${esc(q.id)}" data-iid="${inter.id}">Copy prompt</button>${chatButtons(q)}</div>
         <div class="small" role="status" aria-live="polite" id="copymsg-${inter.id}"></div>
         <div class="sub stack">
           <label class="f">Paste the AI’s reply here<textarea rows="8" id="resp-${inter.id}" data-iresp="${inter.id}" data-qid="${esc(q.id)}" placeholder="Paste the whole reply. It is stored exactly as pasted.">${esc(inter.responseDraft || '')}</textarea></label>
@@ -2187,10 +2225,16 @@ function taskBox(q, task, { locked = '', extraLabel = 'Extra context for this pr
 }
 function interactionFold(q, i, open) {
   const extras = [i.verdict ? `Verdict: ${VERDICT_LABEL[i.verdict]}` : '', i.mistakeType ? `Mistake: ${MISTAKE_LABEL[i.mistakeType]}` : ''].filter(Boolean).join(' · ');
-  return `<details class="fold" ${open ? 'open' : ''} style="margin-top:8px"><summary>${esc(TASKS[i.task]?.short || i.task)} — ${esc(fmtTime(i.savedAt || i.at))}${i.task === 'variations' ? ' <span class="small muted" style="font-weight:400">(includes answers — attempt first)</span>' : ''}${extras ? ` <span class="small muted" style="font-weight:400">${esc(extras)}</span>` : ''}</summary>
-    ${i.takeaway ? `<p class="small" style="margin:6px 0"><b>Takeaway:</b> ${esc(i.takeaway)}</p>` : ''}
-    ${i.followUp ? `<p class="small" style="margin:6px 0"><b>Follow-up:</b> ${esc(i.followUp)}</p>` : ''}
-    <div class="reply-view">${renderReply(i.response)}</div>
+  const editing = !!UI.editReply[i.id];
+  const oldChat = safeUrl(i.chatUrl) && i.chatUrl !== q.chatUrl ? safeUrl(i.chatUrl) : '';
+  const versions = Array.isArray(i.edits) ? i.edits : [];
+  return `<details class="fold" ${open || editing ? 'open' : ''} style="margin-top:8px"><summary>${esc(TASKS[i.task]?.short || i.task)} — ${esc(fmtTime(i.savedAt || i.at))}${i.editedAt ? ` <span class="small muted" style="font-weight:400">(edited ${esc(fmtTime(i.editedAt))})</span>` : ''}${i.task === 'variations' ? ' <span class="small muted" style="font-weight:400">(includes answers — attempt first)</span>' : ''}${extras ? ` <span class="small muted" style="font-weight:400">${esc(extras)}</span>` : ''}</summary>
+    ${editing ? replyEditor(q, i) : `
+      ${i.takeaway ? `<p class="small" style="margin:6px 0"><b>Takeaway:</b> ${esc(i.takeaway)}</p>` : ''}
+      ${i.followUp ? `<p class="small" style="margin:6px 0"><b>Follow-up:</b> ${esc(i.followUp)}</p>` : ''}
+      <div class="reply-view">${renderReply(i.response)}</div>
+      <div class="row" style="margin-top:6px"><button class="btn small" data-act="editReply" data-id="${esc(q.id)}" data-iid="${esc(i.id)}">Edit reply</button>${oldChat ? `<a class="btn ghost small" href="${esc(oldChat)}" target="_blank" rel="noopener">Open the chat this reply came from</a>` : ''}</div>`}
+    ${versions.length ? `<details class="fold" style="margin-top:6px"><summary class="small">Earlier versions (${versions.length})</summary>${versions.map((v, idx) => ({ v, idx })).reverse().map(({ v, idx }) => `<div style="margin-top:8px"><div class="row"><span class="small muted" style="flex:1">Replaced on ${esc(fmtTime(v.at))}</span><button class="btn ghost small" data-act="restoreReply" data-id="${esc(q.id)}" data-iid="${esc(i.id)}" data-n="${idx}">Restore this version</button></div><div class="reply-view" style="max-height:240px">${renderReply(v.response)}</div></div>`).join('')}</details>` : ''}
     <details class="fold" style="margin-top:6px"><summary class="small">Prompt used</summary><pre class="reply-view mono" style="font-size:12px">${esc(i.prompt)}</pre></details>
   </details>`;
 }
@@ -3052,7 +3096,7 @@ const ACT = {
     if (r === 'ok') {
       if (!inter.used) { inter.used = true; inter.usedAt = nowISO(); }
       touch(q); commit({ render: false });
-      if (msg) msg.innerHTML = `<span style="color:var(--live)">Copied.</span> Open your AI chat, attach ${esc(ATTACH[inter.task].map(x => x.replace(/\.$/, '')).join(' + ').toLowerCase())}, then paste and send.`;
+      if (msg) msg.innerHTML = `<span style="color:var(--live)">Copied.</span> Open ${safeUrl(q.chatUrl) ? `this question’s ${esc(chatHost(q.chatUrl))} chat` : 'your AI chat'}, attach ${esc(ATTACH[inter.task].map(x => x.replace(/\.$/, '')).join(' + ').toLowerCase())}, then paste and send.`;
     } else {
       if (!inter.used) { inter.used = true; inter.usedAt = nowISO(); }
       touch(q); commit({ render: false });
@@ -3068,6 +3112,7 @@ const ACT = {
     const pta = document.getElementById('prompt-' + inter.id);
     if (pta) inter.prompt = pta.value;
     inter.response = text; inter.responseDraft = ''; inter.savedAt = nowISO(); inter.status = 'saved';
+    inter.chatUrl = safeUrl(q.chatUrl);
     if (!inter.used) { inter.used = true; inter.usedAt = inter.savedAt; }
     if (inter.mistakeType) q.mistakes.push({ id: uid('mis'), type: inter.mistakeType, note: inter.followUp || inter.takeaway || '', at: nowISO(), interactionId: inter.id });
     if (inter.task === 'learn') q.stagesDone.learn = q.stagesDone.learn || nowISO();
@@ -3077,6 +3122,36 @@ const ACT = {
     const nextTip = { learn: 'Now close the lesson and attempt the question.', diagnose: 'Next: learn the missing theory.', theory: 'Now try again, or take Hint 1.', hint1: 'Try again now. Hint 2 is unlocked if you still need it.', hint2: 'Try again now. Hint 3 (full solution) is unlocked if you need it.', hint3: 'Read it fully, then close it. Retry from scratch on a later study day.', evaluate: 'Next: learn the pattern behind this question.', pattern: 'Now create a pattern card from this reply.', variations: 'Now add the variations below and attempt them before opening the answers.' }[inter.task];
     UI.justSaved[key] = `Saved to ${q.id} at ${new Date().toLocaleTimeString(undefined, { hour: '2-digit', minute: '2-digit' })}. ${nextTip}`;
     bumpActivity(); touch(q); commit();
+  },
+  editReply(el) {
+    const q = getQ(el.dataset.id); const i = q && q.interactions.find(x => x.id === el.dataset.iid); if (!i) return;
+    UI.editReply[i.id] = { response: i.response, verdict: i.verdict || '', takeaway: i.takeaway || '', followUp: i.followUp || '' };
+    rerender();
+    const ta = document.getElementById('edit-resp-' + i.id); if (ta) ta.focus({ preventScroll: true });
+  },
+  cancelReplyEdit(el) { delete UI.editReply[el.dataset.iid]; rerender(); },
+  saveReplyEdit(el) {
+    const q = getQ(el.dataset.id); const i = q && q.interactions.find(x => x.id === el.dataset.iid); const d = UI.editReply[el.dataset.iid];
+    if (!i || !d) return;
+    const text = (d.response || '').trim();
+    if (!text) { toast('The reply can’t be empty. Press Cancel to keep the saved version.', true); return; }
+    if (i.task === 'evaluate' && !d.verdict) { toast('Choose the verdict, then save.', true); return; }
+    const next = { response: text, verdict: d.verdict || '', takeaway: (d.takeaway || '').trim(), followUp: (d.followUp || '').trim() };
+    const changed = next.response !== i.response || next.verdict !== (i.verdict || '') || next.takeaway !== (i.takeaway || '') || next.followUp !== (i.followUp || '');
+    delete UI.editReply[i.id];
+    if (!changed) { rerender(); return; }
+    if (!Array.isArray(i.edits)) i.edits = [];
+    i.edits.push(snapReply(i));
+    Object.assign(i, next, { editedAt: nowISO() });
+    touch(q); toast('Reply updated. The previous text is under “Earlier versions”.'); commit();
+  },
+  restoreReply(el) {
+    const q = getQ(el.dataset.id); const i = q && q.interactions.find(x => x.id === el.dataset.iid);
+    const v = i && Array.isArray(i.edits) ? i.edits[+el.dataset.n] : null; if (!v) return;
+    if (!confirm('Restore this earlier version? The current text is kept as another earlier version.')) return;
+    i.edits.push(snapReply(i));
+    Object.assign(i, { response: v.response, verdict: v.verdict || '', takeaway: v.takeaway || '', followUp: v.followUp || '', editedAt: nowISO() });
+    delete UI.editReply[i.id]; touch(q); toast('Earlier version restored.'); commit();
   },
   learnDone(el) {
     const q = getQ(el.dataset.id); if (!q) return;
@@ -3284,6 +3359,7 @@ document.addEventListener('input', e => {
   const t = e.target, ds = t.dataset;
   if (t.id === 'qSearch') { UI.search = t.value; const pos = t.selectionStart; rerender(); const n = $('#qSearch'); if (n) { n.focus(); n.setSelectionRange(pos, pos); } return; }
   if (t.id === 'patSearch') { UI.patSearch = t.value; const pos = t.selectionStart; rerender(); const n = $('#patSearch'); if (n) { n.focus(); n.setSelectionRange(pos, pos); } return; }
+  if (ds.ed) { const [iid, f] = ds.ed.split('|'); const d = UI.editReply[iid]; if (d) d[f] = t.value; return; }
   if (ds.extra !== undefined) { getUI(UI.prompts, ds.extra, { extra: '' }).extra = t.value; return; }
   if (ds.iprompt) { const q = getQ(ds.qid); const i = q && q.interactions.find(x => x.id === ds.iprompt); if (i) { i.prompt = t.value; draftSave(); } return; }
   if (ds.iresp) { const q = getQ(ds.qid); const i = q && q.interactions.find(x => x.id === ds.iresp); if (i) { i.responseDraft = t.value; draftSave(); } return; }
@@ -3314,6 +3390,15 @@ document.addEventListener('input', e => {
 function setPath(obj, path, val) { const p = path.split('.'); let o = obj; for (let i = 0; i < p.length - 1; i++) o = o[p[i]]; o[p[p.length - 1]] = val; }
 document.addEventListener('change', e => {
   const t = e.target, ds = t.dataset;
+  if (ds.chaturl) {
+    const q = getQ(ds.chaturl); if (!q) return;
+    const v = t.value.trim();
+    if (v && !safeUrl(v)) { toast('Paste the full chat link, starting with https://', true); t.value = q.chatUrl || ''; return; }
+    if (v === (q.chatUrl || '')) return;
+    q.chatUrl = v; touch(q);
+    toast(v ? `Chat link saved to ${q.id}.` : `Chat link removed from ${q.id}.`);
+    commit(); return;
+  }
   if (ds.qfield) {
     const q = getQ(UI.route.id); if (!q) return;
     let v = t.value;
