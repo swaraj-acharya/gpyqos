@@ -1349,16 +1349,29 @@ function streakDays() {
 
 /* ---------------------------------------------------------------------
    Prompt generator. Nine genuinely different tasks.
-   Adapted from PrepBoard's lib/prompts.js: graded hints (only hint 3 solves),
-   "explain like I'm 12", and a reply-format block so the answer pastes back cleanly.
+   Replies are asked to be COMPACT BUT COMPLETE: every fact, step, condition
+   and unit stays; repetition, filler and long prose go. Section titles are
+   unchanged where the app reads them back (pattern cards, variations).
    --------------------------------------------------------------------- */
-const SIMPLE = 'Explain like you are teaching a curious 12-year-old, but keep every engineering statement accurate. Define each new term the first time you use it.';
+const STYLE = `HOW TO WRITE YOUR REPLY
+Goal: a person with zero background understands everything, in the fewest words. Cut words, never facts.
+- Lead with the point. No greeting, no intro, no closing offer, no restating my question or these instructions.
+- Say each fact once. If it already appeared, write "(see 3)" instead of repeating it.
+- Short sentences (under 20 words), everyday words, "- " points instead of paragraphs.
+- Define each technical term the first time it appears, in brackets, in under 10 words. Example: phasor (an arrow that stands for a sine wave).
+- At most one analogy, 1-2 lines, only where it really helps.
+- One formula per line, in this compact form:
+  V = I*R | V voltage (V), I current (A), R resistance (ohm) | valid: linear R | not valid: diodes, arcs
+- If a section does not apply, write its title and "- n/a". Never pad.
+- Never drop a step, condition, sign convention or unit a beginner needs. Short is good; missing is not.
 
-const FORMAT = `HOW TO WRITE YOUR REPLY
-- Reply here in the chat as a normal message. Don't create a file, canvas, artifact or download.
-- I will copy your reply into a plain-text notebook, so: put each numbered section title on its own line in capitals (for example "1. MAIN CONCEPT"), use "- " for points, and leave a blank line between sections.
-- Write equations in plain text that survives copy-paste, for example V = I*R, Z = R + jX, P = sqrt(3)*VL*IL*cos(phi). No LaTeX and no tables.
-- Give units with every quantity.`;
+FORMAT (I paste your reply into a plain-text notebook)
+- Reply in the chat as a normal message. No file, canvas, artifact or download.
+- Each section title on its own line, in capitals, exactly as I give it (for example "1. MAIN CONCEPT"). Content starts on the next line. Blank line between sections.
+- Plain-text maths: Z = R + jX, P = sqrt(3)*VL*IL*cos(phi). No LaTeX, no tables, no bold.
+- Units with every quantity.`;
+const LEN = words => `LENGTH: aim for about ${words} words. Go longer only if a needed fact, step or condition would otherwise be lost.`;
+const XTRA = (extra, label = 'Extra context from me') => extra ? `${label}:\n"""\n${clip(extra, 1500)}\n"""` : '';
 
 const IMAGE_RULES = `READING THE SCREENSHOT
 - Read the attached screenshot carefully, including any figure, circuit diagram, graph, units and answer options.
@@ -1397,7 +1410,7 @@ function latestReply(q, task) {
 function headerBlock(q, task) {
   const lines = [];
   lines.push('ABOUT ME');
-  lines.push('I am preparing for GATE 2027 Electrical Engineering (EE), aiming for about 60 out of 100. My theory is still weak, so do not assume I know the basics. I learn question-first: one question, the exact concepts it needs, then independent practice. Help me understand, not memorise.');
+  lines.push('I am preparing for GATE 2027 Electrical Engineering (EE), aiming for about 60 out of 100. My theory is still weak, so do not assume I know the basics. I learn question-first: one question, the exact concepts it needs, then independent practice. I read replies under time pressure, so keep them complete but compact. Help me understand, not memorise.');
   lines.push('');
   lines.push('THE QUESTION');
   lines.push(`- My record: ${q.id}${q.title ? ' — ' + q.title : ''}`);
@@ -1416,10 +1429,6 @@ function headerBlock(q, task) {
   return lines.join('\n');
 }
 
-function sameChatNote() {
-  return 'If we are continuing the same chat, use what you already taught me above, but keep this reply self-contained.';
-}
-
 function attemptNotes(q, extra) {
   const a = lastAttempt(q);
   const parts = [];
@@ -1434,108 +1443,114 @@ function attemptNotes(q, extra) {
 const TEMPLATES = {
   learn: (q, extra) => `TASK: TEACH ME THE MAIN CONCEPT BEFORE MY FIRST ATTEMPT
 
-I have NOT attempted this question yet. Prepare me for a real, independent first attempt.
-Strict rule: do NOT solve this question. Do not compute any of its values, do not say which option is correct, and do not walk through its specific steps. If an example would give the answer away, change the setup and the numbers.
-${SIMPLE}
-${extra ? `\nExtra context from me:\n"""\n${clip(extra, 1500)}\n"""\n` : ''}
-Cover these sections, in this order:
+I have NOT attempted this question yet. Prepare me for an independent first attempt.
+Strict rule: do NOT solve this question. No values computed from it, no correct option, no walk-through of its steps. If an example would give the answer away, change the setup and numbers.
+${XTRA(extra)}
+${LEN('600 to 800')}
+
+Use exactly these sections:
+
+IN SHORT
+2-3 lines: what this question tests and the one idea that unlocks it. No method steps, no answer.
 
 1. WHAT THIS QUESTION IS ABOUT
-- The topic, and the official GATE 2027 EE syllabus section and subtopic(s) it belongs to (say how sure you are).
-- What kind of quantity is being asked for, described in words only.
+- GATE 2027 EE syllabus section › subtopic, with confidence (high / medium / low).
+- The quantity being asked for, in words.
 
-2. CONCEPT PLAN
-- Must learn now: the 1 to 3 ideas I need for this question.
-- Prerequisites: what I must already know, with a one-line refresher each.
-- Related concepts to learn later: useful, but not needed today.
+2. WHAT I NEED
+- Must learn now: 1-3 ideas, one line each.
+- Prerequisites: a one-line refresher each.
+- Learn later (not needed today): names only.
 
-3. THE MAIN CONCEPT FROM ZERO
-- Physical or mathematical intuition first (an everyday analogy is welcome).
-- Then the precise idea.
+3. THE CONCEPT FROM ZERO
+- Intuition first, 2-4 lines.
+- Then the precise idea in 3-6 points.
 
 4. FORMULAS
-For each formula: what every symbol means, its units, why the formula works (briefly where it comes from), when it is valid, and when it is NOT valid.
+One line each in the compact form. Add "why:" in one line only if it helps me remember.
 
-5. ASSUMPTIONS, LIMITATIONS AND SIGN CONVENTIONS that matter for this type of question.
+5. TRAPS
+Assumptions, sign conventions and beginner misconceptions together, one line each: "trap -> correct thinking".
 
-6. COMMON MISCONCEPTIONS beginners have here.
+6. WORKED EXAMPLE
+Different setup and numbers from my question. Given, Find, then numbered one-line steps with units, then the answer.
 
-7. A SIMPLE WORKED EXAMPLE with a different setup and different numbers from my question, solved step by step.
+7. LINK TO MY QUESTION
+What to look for in the question and which formulas from 4 apply. No steps, no results.
 
-8. HOW THIS CONNECTS TO MY QUESTION
-- Which ideas above I will need and what to look for in the question, without giving the method's steps or any result.
+8. RECAP AND CHECKS
+- Up to 3 summary lines. Do not re-list the formulas.
+- 3 one-line conceptual checks.
 
-9. SUMMARY
-- At most 5 lines.
-- A formula list.
-- 3 quick conceptual checks for me. Put their answers at the very end under "ANSWERS TO CHECKS".
+ANSWERS TO CHECKS
+One line each, at the very end.
 
-${FORMAT}`,
+${STYLE}`,
 
   diagnose: (q, extra) => `TASK: DIAGNOSE WHERE AND WHY I GOT STUCK
 
 I learned the main concept and then attempted the question on my own.
 ${attemptNotes(q, extra)}
-${sameChatNote()}
+If we are in the same chat, build on what you already taught me and do not repeat it.
 
-Find the EARLIEST and MOST IMPORTANT gap, not a list of every small issue. Do not give me the full solution and do not compute the final answer. Do not repeat the whole concept lesson.
+Find the EARLIEST and MOST IMPORTANT gap, not every small issue. No full solution, no final answer, no re-teaching the lesson.
+${LEN('250 to 350')}
 
-1. WHAT I ALREADY UNDERSTAND
-Based on my notes (and my rough work, if attached).
+1. WHAT I GOT RIGHT
+Up to 3 points, from my notes (and rough work, if attached).
 
 2. WHERE I GOT STUCK
-The first point where my reasoning stopped or went wrong.
+The first point where my reasoning stopped or went wrong, in 1-2 lines.
 
-3. THE GAP, CLASSIFIED
-Choose the best fit, plus a second one only if clearly relevant:
-missing prerequisite / conceptual misunderstanding / forgotten formula / wrong formula selection / incorrect assumption / method-selection difficulty / mathematical or algebraic difficulty / calculation error / sign or unit error / careless execution / misreading the question.
-Explain why you chose it.
+3. THE GAP
+Pick the best fit (a second only if clearly relevant): missing prerequisite / conceptual misunderstanding / forgotten formula / wrong formula selection / incorrect assumption / method-selection difficulty / mathematical or algebraic difficulty / calculation error / sign or unit error / careless execution / misreading the question. Then one line on why.
 
-4. WHY THIS GAP MATTERS
-For this question and for similar GATE questions.
+4. WHY IT MATTERS
+1-2 lines, for this and similar GATE questions.
 
 5. WHAT TO STUDY NEXT
-The exact concept(s), as narrow as possible. Not the whole chapter.
+The exact concept(s), as narrow as possible, one line each.
 
-6. ONE CHECK QUESTION
-A short question that shows whether the gap is fixed. Put its answer at the very end.
+6. CHECK QUESTION
+One short question. Its answer goes at the very end.
 
-If my notes are too thin to diagnose, say so plainly and tell me exactly what to send (for example a photo of my rough work, or the step I reached).
+If my notes are too thin to diagnose, say so in one line and tell me exactly what to send.
 
-${FORMAT}`,
+${STYLE}`,
 
   theory: (q, extra) => {
     const diag = latestReply(q, 'diagnose');
     return `TASK: TEACH ME ONLY THE MISSING THEORY
 
 A diagnosis of my attempt found a specific gap. Teach just that gap.
-${diag ? `The diagnosis I received (saved in my notes):\n"""\n${clip(diag, 2500)}\n"""` : 'I have no saved diagnosis. Use my notes below; if they are not enough to identify the gap, ask me one or two short questions first.'}
-${extra ? `\nThe gap in my own words:\n"""\n${clip(extra, 1200)}\n"""` : ''}
+${diag ? `The diagnosis I received:\n"""\n${clip(diag, 2500)}\n"""` : 'I have no saved diagnosis. Use my notes below; if they are not enough, ask me one or two short questions first.'}
+${XTRA(extra, 'The gap in my own words')}
 ${attemptNotes(q, '')}
 
-Rules: do not re-teach the whole chapter or repeat the earlier concept lesson unless the gap really needs it. Do NOT solve the original question and do not give its final answer.
-${SIMPLE}
+Do not re-teach the chapter or the earlier lesson. Do NOT solve the original question or give its answer.
+${LEN('400 to 500')}
 
 1. THE GAP IN ONE SENTENCE
 
-2. INTUITIVE MEANING
-Simple words; an analogy is welcome.
+2. INTUITION
+2-4 lines.
 
 3. THE PRECISE IDEA AND FORMULAS
-Every symbol, its units, why it works, and when it is valid.
+Short points, then formulas in the compact form.
 
-4. ASSUMPTIONS AND CONDITIONS
+4. CONDITIONS
+When it holds and when it does not, one line each.
 
-5. A SMALL EXAMPLE
-Different from my question, worked step by step.
+5. SMALL EXAMPLE
+Different from my question. Numbered one-line steps with units.
 
 6. HOW THIS UNLOCKS MY QUESTION
-What I can now do at the point where I got stuck, as a direction, not as worked steps.
+The direction at the point where I got stuck, 1-3 lines, no worked steps.
 
 7. TWO QUICK CHECKS
 Answers at the very end.
 
-${FORMAT}`;
+${STYLE}`;
   },
 
   hint1: (q, extra) => `TASK: HINT 1 OF 3 — A GENTLE NUDGE ONLY
@@ -1562,97 +1577,96 @@ Rules:
 
   hint3: (q, extra) => `TASK: HINT 3 OF 3 — THE COMPLETE SOLUTION
 
-I have tried and I am ready to see the full solution. Make it reliable: check every calculation and verify the result before you write it.
-${q.officialAnswer ? `The official answer key says: ${q.officialAnswer}. Use it as a check. If your result differs, recheck; if you still disagree, explain exactly why.` : 'I do not have the official answer key, so verify your answer independently.'}
-${extra ? `\nExtra context from me:\n"""\n${clip(extra, 1200)}\n"""` : ''}
+I am ready to see the full solution. Check every calculation and verify the result before writing it.
+${q.officialAnswer ? `The official answer key says: ${q.officialAnswer}. Use it as a check; if you still disagree after rechecking, say exactly why.` : 'I do not have the official answer key, so verify independently.'}
+${XTRA(extra)}
+${LEN('500 to 700')}
 
-1. WHAT IS ASKED AND WHAT IS GIVEN
-With units.
+IN SHORT
+Final answer (value with units, or option) and the key idea, one line each.
 
-2. RELEVANT THEORY AND ASSUMPTIONS
+1. GIVEN AND ASKED
+Compact list with units.
 
-3. WHY THIS METHOD APPLIES
-And why the obvious alternative does or does not work here.
+2. METHOD AND WHY
+Theory, assumptions, why this method fits and why the obvious alternative does or does not. Up to 5 points.
 
-4. GOVERNING EQUATIONS
-Every symbol defined.
+3. EQUATIONS
+Compact form, every symbol defined.
 
-5. STEP-BY-STEP SOLUTION
-Substitutions, algebra, sign conventions and units at every step. Do not skip steps a beginner would need.
+4. SOLUTION
+Numbered steps, one line each: action -> result with units. Keep every step a beginner needs. Add a short "(why: ...)" only where a step is not obvious. No commentary between steps.
 
-6. FINAL ANSWER AND ITS MEANING
-With units. For MCQ/MSQ name the correct option(s); for NAT give the value with sensible rounding. Then what the result means physically.
+5. FINAL ANSWER
+Value with sensible rounding (NAT) or option(s) (MCQ/MSQ), plus its physical meaning in one line.
 
-7. VERIFICATION
-A check by a second method, a limiting case, units, or a power/energy balance, whichever fits.
+6. VERIFICATION
+One check: second method, limiting case, units, or power/energy balance.
 
-8. COMMON WRONG APPROACHES
-Why each fails, including the trap options if this is an MCQ or MSQ.
+7. WRONG APPROACHES
+One line each: approach -> why it fails. Include the trap options for MCQ/MSQ.
 
-9. WHAT I SHOULD REMEMBER
-The key insight in one sentence, and the method as a short checklist.
+8. REMEMBER
+Key insight in one sentence, then the method as a 3-6 step checklist.
 
-${SIMPLE}
-
-${FORMAT}`,
+${STYLE}`,
 
   evaluate: (q, extra) => {
     const a = lastAttempt(q);
     return `TASK: EVALUATE MY HANDWRITTEN SOLUTION
 
-I have attached TWO images: (1) the original question and (2) my handwritten solution.
+I attached TWO images: (1) the question, (2) my handwritten solution.
 ${a ? `This working is from my attempt on ${fmtTime(a.at)} (${KIND_LABEL[a.kind].toLowerCase()}).` : ''}
-${q.officialAnswer ? `The official answer key says: ${q.officialAnswer}. Use it only as a check; evaluate my reasoning on its own merits.` : ''}
-${extra ? `\nWhat I want you to focus on:\n"""\n${clip(extra, 1200)}\n"""` : ''}
-
-Please do the following in order:
+${q.officialAnswer ? `Official answer key: ${q.officialAnswer}. Use it only as a check; judge my reasoning on its own merits.` : ''}
+${XTRA(extra, 'What I want you to focus on')}
+${LEN('350 to 500')}
 
 1. TRANSCRIPTION
-Write out the essential steps of my solution as you read them. Mark anything you cannot read as [unclear] and say how it affects your evaluation. If too much is unclear, stop and ask me for a clearer photo. Do not guess what I wrote.
+My key steps, numbered S1, S2, ..., one line each. Mark unreadable parts [unclear]. If too much is unclear, stop and ask for a clearer photo. Do not guess.
 
 2. VERDICT
-Exactly one of: Correct / Correct but incomplete / Partially correct / Incorrect due to a conceptual error / Incorrect due to calculation or algebra / Unable to determine because the image is unclear.
-Then one line giving the main reason.
+Exactly one of: Correct / Correct but incomplete / Partially correct / Incorrect due to a conceptual error / Incorrect due to calculation or algebra / Unable to determine because the image is unclear. Then a one-line reason.
 
-3. LINE-BY-LINE CHECK
-For each step: "OK" or the problem. Accept any valid alternative method; do not mark a step wrong just because it differs from your approach.
+3. STEP CHECK
+List only the steps with a problem: "S3: problem -> why". Then one line: "All other steps: OK". Accept any valid alternative method.
 
-4. FIRST INCORRECT OR UNJUSTIFIED STEP
-Quote it, explain why it fails, and show how it affected everything after it. If there is none, say so.
+4. FIRST WRONG STEP
+Quote it, say why it fails and how it affected the rest, in 2-4 lines. Or "None".
 
 5. WHAT I DID WELL
-Be specific.
+Up to 3 specific points.
 
-6. HOW TO FIX IT
-The corrected step(s) and the correct result. If my method was valid, continue from my own working instead of switching to a new method.
+6. THE FIX
+Corrected step(s) continuing from my own working (switch method only if mine was invalid), and the correct result.
 
-7. WHY THE MISTAKE HAPPENED AND WHAT TO LEARN NEXT
-The precise concept or habit to work on.
+7. WHY IT HAPPENED AND WHAT TO LEARN
+1-3 lines: the exact concept or habit to work on.
 
 8. IF MY ANSWER IS CORRECT
-My strengths, and a faster or clearer exam approach if one exists.
+A faster or clearer exam approach, if one exists; otherwise "- n/a".
 
-Do not give me a GATE score or marks for my working: the official marking scheme for written working is unknown (GATE itself only checks the final answer).
+No GATE score or marks for my working: GATE only checks the final answer.
 
-${FORMAT}`;
+${STYLE}`;
   },
 
   pattern: (q, extra) => `TASK: TEACH ME TO RECOGNISE THIS QUESTION'S PATTERN
 
-I have attempted this question and reviewed a solution. Now teach me the whole family of problems it belongs to, so I can spot the right method in an unfamiliar exam question. A topic name alone is not enough.
+I have attempted this question and reviewed a solution. Teach me the family of problems it belongs to, so I spot the method in an unfamiliar exam question. A topic name alone is not enough.
 ${q.takeaway ? `My own takeaway so far: ${clip(q.takeaway, 600)}` : ''}
-${extra ? `\nExtra context from me:\n"""\n${clip(extra, 1200)}\n"""` : ''}
+${XTRA(extra)}
+${LEN('450 to 600')}
 
-Use exactly these 13 numbered section titles, because I save them as a pattern card:
+Use exactly these 13 numbered titles; I save them as a pattern card. Each section: up to 4 one-line points, except 5, which may have up to 8 steps.
 
 1. PATTERN NAME
-Short, memorable and specific (for example "Max power transfer with a dependent source", not "Network theorems").
+Short and specific (for example "Max power transfer with a dependent source", not "Network theorems").
 
 2. QUESTION ARCHETYPE
-The general form of the questions in this family.
+The general form of questions in this family.
 
 3. RECOGNITION CLUES
-Words, given data, figure or circuit features, or requested quantities that signal this pattern.
+Words, given data, figure features or requested quantities that signal this pattern.
 
 4. GOVERNING PRINCIPLE
 
@@ -1667,50 +1681,40 @@ When the method stops working.
 8. COMMON TRAPS
 
 9. SIMILAR-LOOKING PROBLEMS
-Problems that look alike but need a different method, and how to tell them apart.
+Look-alikes that need a different method, and how to tell them apart. If more than one approach is plausible here, say how to choose.
 
 10. WHEN THE METHOD CHANGES
-The conditions that switch the method (for example a dependent source, a non-ideal element, an unbalanced load).
+Conditions that switch the method (dependent source, non-ideal element, unbalanced load, and so on).
 
 11. USEFUL VARIATIONS
 How examiners vary this question.
 
 12. SYLLABUS LINKS
-The official GATE 2027 EE syllabus section and subtopic(s).
+GATE 2027 EE section and subtopic(s).
 
 13. MEMORY HOOK
 One line in exactly this form: "When I see ___, check ___ because ___."
 
-If more than one approach is plausible for this question, explain how to choose between them inside section 9 or 10.
-${SIMPLE}
-
-${FORMAT}`,
+${STYLE}`,
 
   variations: (q, extra) => `TASK: GENERATE FRESH PRACTICE VARIATIONS
 
-Create 4 to 6 NEW practice questions based on the concept of the attached question. They are AI-generated practice questions: label each one "AI-generated practice" and never present any as a GATE previous-year question.
-${extra ? `\nWhat I want to practise:\n"""\n${clip(extra, 1200)}\n"""\n` : ''}
-Make them progressively harder and, where suitable, include:
-- a numerical variation (new values)
-- a different requested quantity
-- a conceptual variation (little or no calculation)
-- a changed assumption or boundary condition
-- a combined-concept variation
-- GATE formats: at least one MCQ (4 options), one MSQ, and one NAT (state the expected precision)
+Create 4 to 6 NEW practice questions on the concept of the attached question. Label each "AI-generated practice"; never present one as a GATE previous-year question.
+${XTRA(extra, 'What I want to practise')}
+Make them progressively harder. Where suitable include: new values, a different requested quantity, a conceptual one (little or no calculation), a changed assumption or boundary condition, and a combined-concept one. Formats: at least one MCQ (4 options), one MSQ and one NAT (state the expected precision).
 
-Every question must be self-contained and solvable: give every value and unit, and describe any circuit precisely in words (element values, connections, node labels), since you cannot draw.
+Every question must be self-contained: every value and unit given, any circuit described precisely in words (element values, connections, node labels). Keep each question under about 80 words.
 
 LAYOUT
 
 PART A: QUESTIONS
-For each question, start a new line with "VARIATION n (type) — AI-generated practice", then the question. Under it add two lines: "What changed:" and "Recognition cue:" (do not give the method away completely).
-No answers, hints or solutions anywhere in Part A.
+For each: a line "VARIATION n (type) — AI-generated practice", then the question, then one line "What changed:" and one line "Recognition cue:" (do not give the method away).
+No answers or hints anywhere in Part A.
 
 PART B: ANSWERS AND SOLUTIONS
-Start Part B with the line "ANSWERS AND SOLUTIONS" on its own. Then for each variation: the answer, a step-by-step solution, and what stays the same as the original question.
-Verify every answer before writing it.
+Start Part B with the line "ANSWERS AND SOLUTIONS" on its own. For each variation: "Vn answer:" first, then numbered one-line steps (only those a beginner needs, with units), then one line "Same as original:". Verify every answer before writing it.
 
-${FORMAT}`,
+${STYLE}`,
 };
 
 function buildPrompt(q, task, extra = '') {
