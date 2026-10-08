@@ -485,6 +485,8 @@ const portalSubject = name => PORTAL.find(s => s[0] === name) || null;
 const portalTopic = (subject, topic) => { const s = portalSubject(subject); return s ? s[2].find(t => t[0] === topic) || null : null; };
 const pyqKey = (...parts) => parts.filter(Boolean).join(' › ');
 function pyqPath(q) { const p = q.pyq || {}; return [p.subject, p.topic, p.subtopic].filter(Boolean); }
+/* General Aptitude questions use a single one-prompt step instead of the 7-stage loop. */
+const isGA = q => q.pyq?.subject === 'General Aptitude' || (!q.pyq?.subject && q.syllabusLinks.length > 0 && q.syllabusLinks.every(id => id.startsWith('GA')));
 
 /* ---------------------------------------------------------------------
    Vocabulary
@@ -510,6 +512,7 @@ const TASKS = {
   evaluate:   { label: 'Evaluate my handwritten solution', short: 'Solution evaluation', stage: 'evaluate' },
   pattern:    { label: 'Recognise the question pattern', short: 'Pattern lesson', stage: 'pattern' },
   variations: { label: 'Generate question variations', short: 'Variations', stage: 'variations' },
+  aptitude:   { label: 'Check my aptitude solution', short: 'Aptitude check', stage: 'aptitude' },
 };
 
 const OUTCOMES = [
@@ -1035,7 +1038,7 @@ const isSolved = a => a && a.outcome === 'solved';
 
 /* The day of the most recent help that could make a same-day "retry" a reproduction. */
 function lastHelpDay(q) {
-  const help = q.interactions.filter(i => ['theory', 'hint1', 'hint2', 'hint3', 'evaluate'].includes(i.task) && (i.used || hasReply(i)));
+  const help = q.interactions.filter(i => ['theory', 'hint1', 'hint2', 'hint3', 'evaluate', 'aptitude'].includes(i.task) && (i.used || hasReply(i)));
   if (!help.length) return null;
   return help.map(i => i.day || dayKey(i.at)).sort().pop();
 }
@@ -1108,6 +1111,13 @@ function stageState(q, stage) {
 }
 
 function nextAction(q) {
+  if (isGA(q)) {
+    if (!interactionsOf(q, 'aptitude').some(hasReply)) return { stage: 'attempt', text: 'Solve it on paper, then send the question and your solution with the one prompt.' };
+    if (!q.attempts.length) return { stage: 'attempt', text: 'Record whether you got it right.' };
+    if (isDue(q)) return { stage: 'history', text: 'Revision is due. Solve it again before looking at your notes.', review: true };
+    if (!q.revision.nextReviewAt) return { stage: 'history', text: 'Schedule this question for revision.' };
+    return { stage: 'history', text: `Next revision ${relDay(q.revision.nextReviewAt)} (${fmtDay(q.revision.nextReviewAt)}).` };
+  }
   if (q.relearn) return { stage: 'learn', text: 'Relearn the main concept: revision showed it has faded.' };
   if (!stageState(q, 'learn')) return { stage: 'learn', text: 'Learn the main concept before your first attempt.' };
   if (!q.attempts.length) return { stage: 'attempt', text: 'Close the lesson and attempt the question on paper.' };
@@ -1348,7 +1358,7 @@ function streakDays() {
 }
 
 /* ---------------------------------------------------------------------
-   Prompt generator. Nine genuinely different tasks.
+   Prompt generator. Nine genuinely different tasks, plus one-step aptitude.
    Replies are asked to be COMPACT BUT COMPLETE: every fact, step, condition
    and unit stays; repetition, filler and long prose go. Section titles are
    unchanged where the app reads them back (pattern cards, variations).
@@ -1388,6 +1398,7 @@ const ATTACH = {
   evaluate: ['The original question screenshot.', 'Your handwritten solution photo (both images are required).'],
   pattern: ['The original question screenshot.'],
   variations: ['The original question screenshot.'],
+  aptitude: ['The original question screenshot.', 'Your handwritten solution photo (both images are required).'],
 };
 
 function sourceLine(q) {
@@ -1715,6 +1726,36 @@ PART B: ANSWERS AND SOLUTIONS
 Start Part B with the line "ANSWERS AND SOLUTIONS" on its own. For each variation: "Vn answer:" first, then numbered one-line steps (only those a beginner needs, with units), then one line "Same as original:". Verify every answer before writing it.
 
 ${STYLE}`,
+
+  aptitude: (q, extra) => `TASK: GENERAL APTITUDE — CHECK MY SOLUTION AND TEACH THE IDEA
+
+I attached TWO images: (1) the question, (2) my handwritten solution. If my sheet is blank or I could not start, write "- n/a" under 3 and 4 and give everything else.
+${q.officialAnswer ? `Official answer key: ${q.officialAnswer}. Use it as a check; if you disagree after rechecking, say why.` : 'I do not have the answer key, so verify the answer yourself.'}
+${XTRA(extra, 'What I want you to focus on')}
+${LEN('200 to 350')}
+
+1. THEORY
+GA area (verbal / quantitative / analytical / spatial) and the concept tested, in 2-3 lines. Then the rules or formulas needed, one per line.
+
+2. VERDICT
+Exactly one of: Correct / Partially correct / Incorrect due to a conceptual error / Incorrect due to calculation or algebra / Unable to determine because the image is unclear. Then a one-line reason.
+
+3. MY MISTAKE
+The first wrong step in my working: what I wrote -> why it is wrong. Or "None".
+
+4. WHAT I DID WELL
+Up to 2 points.
+
+5. CORRECT SOLUTION
+Numbered one-line steps, then the final answer (option, or value with units).
+
+6. FASTEST EXAM METHOD
+A shortcut, option elimination or estimation that takes under a minute, if one exists. Otherwise "- n/a".
+
+7. REMEMBER
+One trap to avoid and one rule to remember. Two lines at most.
+
+${STYLE}`,
 };
 
 function buildPrompt(q, task, extra = '') {
@@ -1875,7 +1916,7 @@ function replyEditor(q, i) {
   const d = UI.editReply[i.id];
   return `<div class="stack" style="margin-top:8px">
     <label class="f">Reply text<textarea rows="14" id="edit-resp-${esc(i.id)}" data-ed="${esc(i.id)}|response">${esc(d.response)}</textarea></label>
-    ${i.task === 'evaluate' ? `<label class="f">Verdict the tutor gave${selectEl(`data-ed="${esc(i.id)}|verdict"`, VERDICTS, d.verdict, 'Choose the verdict')}</label>` : ''}
+    ${['evaluate', 'aptitude'].includes(i.task) ? `<label class="f">Verdict the tutor gave${selectEl(`data-ed="${esc(i.id)}|verdict"`, VERDICTS, d.verdict, 'Choose the verdict')}</label>` : ''}
     <div class="grid2">
       <label class="f">My takeaway in one line<input type="text" data-ed="${esc(i.id)}|takeaway" value="${esc(d.takeaway)}"></label>
       ${['diagnose', 'theory', 'evaluate'].includes(i.task) ? `<label class="f">Follow-up action<input type="text" data-ed="${esc(i.id)}|followUp" value="${esc(d.followUp)}"></label>` : ''}
@@ -2100,16 +2141,16 @@ function viewWorkspace() {
     <a class="btn ghost small" href="#/q" style="margin-bottom:6px">All questions</a>
     <div class="qhead">
       <div style="flex:1;min-width:240px">
-        <div class="row"><span class="qid">${esc(q.id)}</span>${sourceShort(q) ? `<span class="tag">${esc(sourceShort(q))}</span>` : ''}${pyqPath(q).length ? `<a class="tag" href="#/q?pyq=${encodeURIComponent(pyqKey(...pyqPath(q)))}" title="${esc(pyqKey(...pyqPath(q)))}">${esc(pyqPath(q).slice(-1)[0])}</a>` : ''}${levelPill(q)}${isDue(q) ? '<span class="pill due">revision due</span>' : ''}${q.relearn ? '<span class="pill bad" title="Two weak revisions in a row">faded in revision</span>' : ''}</div>
+        <div class="row"><span class="qid">${esc(q.id)}</span>${sourceShort(q) ? `<span class="tag">${esc(sourceShort(q))}</span>` : ''}${pyqPath(q).length ? `<a class="tag" href="#/q?pyq=${encodeURIComponent(pyqKey(...pyqPath(q)))}" title="${esc(pyqKey(...pyqPath(q)))}">${esc(pyqPath(q).slice(-1)[0])}</a>` : ''}${levelPill(q)}${isDue(q) ? '<span class="pill due">revision due</span>' : ''}${q.relearn && !isGA(q) ? '<span class="pill bad" title="Two weak revisions in a row">faded in revision</span>' : ''}</div>
         <input class="title" type="text" data-qfield="title" value="${esc(q.title)}" placeholder="Untitled — add a short name (optional)" aria-label="Question title">
         ${chatRow(q)}
       </div>
       <div class="row"><button class="btn small" data-act="exportOne" data-id="${esc(q.id)}">Export this question</button></div>
     </div>
     ${renderDetails(q)}
-    ${renderTrace(q, stage)}
+    ${isGA(q) ? stageGA(q) : `${renderTrace(q, stage)}
     <div class="nextbar" role="status"><span><b>Next:</b> ${esc(na.text)}</span>${na.stage !== stage || na.tab ? `<button class="btn small" data-act="goNext" data-id="${esc(q.id)}" data-stage="${na.stage}" data-tab="${na.tab || ''}" data-review="${na.review ? 1 : ''}">Go</button>` : ''}</div>
-    ${panels[stage](q)}
+    ${panels[stage](q)}`}
   </div></div>`;
 }
 
@@ -2182,6 +2223,7 @@ const TASK_DESC = {
   evaluate: 'Transcribes your handwritten working, gives a verdict and finds the first wrong step.',
   pattern: 'Teaches the whole family of questions: clues, method, traps and look-alikes. Saved as a pattern card.',
   variations: 'Fresh AI-generated practice questions, with all answers kept after the questions.',
+  aptitude: 'One step: theory first, then a check of your handwritten working, the correct solution and the fastest exam method.',
 };
 function currentInteraction(q, task) {
   const st = UI.prompts[q.id + '|' + task];
@@ -2195,14 +2237,14 @@ function taskBox(q, task, { locked = '', extraLabel = 'Extra context for this pr
   const inter = currentInteraction(q, task);
   const saved = interactionsOf(q, task).filter(hasReply);
   const just = UI.justSaved[key];
-  const withMistake = ['diagnose', 'evaluate'].includes(task);
+  const withMistake = ['diagnose', 'evaluate', 'aptitude'].includes(task);
   const draftMistake = inter ? (inter.mistakeType || '') : '';
   return `<section class="task" id="task-${task}" aria-labelledby="h-${task}">
     <div class="hd"><div><h3 id="h-${task}">${esc(TASKS[task].label)}</h3><p class="muted small" style="margin:2px 0 0">${esc(TASK_DESC[task])}</p></div>
       ${saved.length ? `<span class="pill l3">${plural(saved.length, 'saved reply', 'saved replies')}</span>` : ''}</div>
     <div class="bd stack">
       ${locked ? `<div class="note warn lock">${locked}</div>` : `
-      <div class="note attach"><b>Attach in your AI chat:</b> ${ATTACH[task].map(esc).join(' + ')}${task === 'evaluate' ? ' <b>Both images are needed.</b>' : ''} Then paste the prompt. Continuing the same chat keeps the tutor’s context; the prompt still works in a fresh chat.</div>
+      <div class="note attach"><b>Attach in your AI chat:</b> ${ATTACH[task].map(esc).join(' + ')}${['evaluate', 'aptitude'].includes(task) ? ' <b>Both images are needed.</b>' : ''} Then paste the prompt. Continuing the same chat keeps the tutor’s context; the prompt still works in a fresh chat.</div>
       <label class="f">${esc(extraLabel)}<textarea rows="2" data-extra="${esc(key)}" placeholder="${esc(extraPlaceholder)}">${esc(st.extra)}</textarea></label>
       <div class="row">
         <button class="btn ${inter ? '' : 'primary big'}" data-act="gen" data-id="${esc(q.id)}" data-task="${task}">${inter ? 'Regenerate prompt' : 'Generate prompt'}</button>
@@ -2214,7 +2256,7 @@ function taskBox(q, task, { locked = '', extraLabel = 'Extra context for this pr
         <div class="small" role="status" aria-live="polite" id="copymsg-${inter.id}"></div>
         <div class="sub stack">
           <label class="f">Paste the AI’s reply here<textarea rows="8" id="resp-${inter.id}" data-iresp="${inter.id}" data-qid="${esc(q.id)}" placeholder="Paste the whole reply. It is stored exactly as pasted.">${esc(inter.responseDraft || '')}</textarea></label>
-          ${task === 'evaluate' ? `<label class="f">Verdict the tutor gave${selectEl(`data-iverdict="${inter.id}" data-qid="${esc(q.id)}"`, VERDICTS, inter.verdict || '', 'Choose the verdict')}</label>` : ''}
+          ${['evaluate', 'aptitude'].includes(task) ? `<label class="f">Verdict the tutor gave${selectEl(`data-iverdict="${inter.id}" data-qid="${esc(q.id)}"`, VERDICTS, inter.verdict || '', 'Choose the verdict')}</label>` : ''}
           <div class="grid2">
             ${withMistake ? `<label class="f">Main mistake type (optional)${selectEl(`data-imistake="${inter.id}" data-qid="${esc(q.id)}"`, MISTAKES.map(m => [m[0], m[1]]), draftMistake, 'None / not sure')}</label>` : ''}
             <label class="f">My takeaway in one line (optional)<input type="text" data-itake="${inter.id}" data-qid="${esc(q.id)}" value="${esc(inter.takeaway || '')}" placeholder="What will I do differently?"></label>
@@ -2311,6 +2353,26 @@ function stageHelp(q) {
     <div class="row"><div class="seg" role="group" aria-label="Help options">${tabs.map(([k, l]) => `<button data-act="helpTab" data-id="${esc(q.id)}" data-tab="${k}" aria-pressed="${tab === k}">${esc(l)}${['hint1', 'hint2', 'hint3', 'theory'].includes(k) && usedTask(q, k) ? ' ✓' : ''}</button>`).join('')}</div>
     ${stageState(q, 'help') ? '' : `<button class="btn ghost small" data-act="skipHelp" data-id="${esc(q.id)}">I don’t need help here</button>`}</div>
     ${body}
+  </div>`;
+}
+
+/* ---------- General Aptitude: one step ---------- */
+const GA_RESULTS = [['solved', 'Got it right'], ['partial', 'Partly right'], ['diagnose', 'Got it wrong'], ['cant-start', 'Couldn’t start']];
+function stageGA(q) {
+  const na = nextAction(q);
+  const replied = interactionsOf(q, 'aptitude').some(hasReply);
+  const k = 'gahist:' + q.id;
+  return `<div class="stack">
+    <div class="nextbar" role="status"><span><b>Next:</b> ${esc(na.text)}</span>${na.review ? `<a class="btn small" href="#/revision/${esc(q.id)}">Revise</a>` : ''}</div>
+    <p class="muted">Aptitude is one step. Solve it on paper, photograph your working, then send the question and your solution with this prompt.</p>
+    ${taskBox(q, 'aptitude', { extraLabel: 'Anything to focus on? (optional)', extraPlaceholder: 'e.g. I guessed option C and I am not sure why' })}
+    <div class="panel">
+      <h3>Your result</h3>
+      <p class="small muted">${replied ? 'Going by the verdict above, how did you do?' : 'Record it after the check, or now if you already know.'} Each tap logs one attempt.</p>
+      <div class="choices">${GA_RESULTS.map(([v, l]) => `<button type="button" class="choice" data-act="gaResult" data-id="${esc(q.id)}" data-v="${v}">${esc(l)}</button>`).join('')}</div>
+    </div>
+    ${attemptList(q)}
+    <details class="fold panel" data-sec="${esc(k)}" ${UI.openSections[k] ? 'open' : ''} style="padding:10px 16px"><summary>Notes, revision &amp; history</summary><div style="margin-top:10px">${stageHistory(q)}</div></details>
   </div>`;
 }
 
@@ -2414,9 +2476,6 @@ function stageHistory(q) {
   </div>`;
 }
 
-/* ---------------------------------------------------------------------
-   Syllabus map
-   --------------------------------------------------------------------- */
 /* ---------------------------------------------------------------------
    PYQ Tracker — the ExamDost portal's Subject › Topic › Sub-topic table,
    with your own Added / Attempted / Solved counts and a one-tap Add.
@@ -2580,6 +2639,9 @@ function qaSave(openAfter) {
   renderQuickAdd('qaYear');
 }
 
+/* ---------------------------------------------------------------------
+   Syllabus map
+   --------------------------------------------------------------------- */
 function viewSyllabus() {
   const syl = activeSyllabus();
   const stats = topicStats();
@@ -2722,7 +2784,7 @@ function viewReviewSession(id) {
   const yn = [['yes', 'Yes'], ['partly', 'Partly'], ['no', 'No']];
   const results = [['independent', 'Solved it on my own, full working'], ['answer-only', 'Remembered the final value, couldn’t derive it'], ['peeked', 'Needed to peek at notes or a hint'], ['failed', 'Couldn’t solve it']];
   const disabled = new Set(d.revealed && !d.saved ? ['independent'] : []);
-  const evalReply = latestReply(q, 'hint3') || latestReply(q, 'evaluate');
+  const evalReply = latestReply(q, 'hint3') || latestReply(q, 'evaluate') || latestReply(q, 'aptitude');
   const pats = q.patternIds.map(pid => S.patterns[pid]).filter(Boolean);
   return `
   <a class="btn ghost small" href="#/revision">All revisions</a>
@@ -3123,7 +3185,7 @@ const ACT = {
     if (inter.takeaway && !q.takeaway) q.takeaway = inter.takeaway;
     const key = q.id + '|' + inter.task;
     if (UI.prompts[key]) { UI.prompts[key].iid = null; UI.prompts[key].extra = ''; }
-    const nextTip = { learn: 'Now close the lesson and attempt the question.', diagnose: 'Next: learn the missing theory.', theory: 'Now try again, or take Hint 1.', hint1: 'Try again now. Hint 2 is unlocked if you still need it.', hint2: 'Try again now. Hint 3 (full solution) is unlocked if you need it.', hint3: 'Read it fully, then close it. Retry from scratch on a later study day.', evaluate: 'Next: learn the pattern behind this question.', pattern: 'Now create a pattern card from this reply.', variations: 'Now add the variations below and attempt them before opening the answers.' }[inter.task];
+    const nextTip = { learn: 'Now close the lesson and attempt the question.', diagnose: 'Next: learn the missing theory.', theory: 'Now try again, or take Hint 1.', hint1: 'Try again now. Hint 2 is unlocked if you still need it.', hint2: 'Try again now. Hint 3 (full solution) is unlocked if you need it.', hint3: 'Read it fully, then close it. Retry from scratch on a later study day.', evaluate: 'Next: learn the pattern behind this question.', pattern: 'Now create a pattern card from this reply.', variations: 'Now add the variations below and attempt them before opening the answers.', aptitude: 'Now tap your result below.' }[inter.task];
     UI.justSaved[key] = `Saved to ${q.id} at ${new Date().toLocaleTimeString(undefined, { hour: '2-digit', minute: '2-digit' })}. ${nextTip}`;
     bumpActivity(); touch(q); commit();
   },
@@ -3196,6 +3258,17 @@ const ACT = {
     delete UI.attempt[q.id + '|' + mode];
     bumpActivity(); touch(q);
     toast(`Attempt saved: ${c.label}.`);
+    commit();
+  },
+  gaResult(el) {
+    const q = getQ(el.dataset.id); if (!q) return;
+    const v = el.dataset.v, day = dayKey();
+    const kind = q.attempts.length ? 'retry' : 'first';
+    const c = classifyAttempt(q, kind, v, day);
+    const label = Object.fromEntries(GA_RESULTS)[v] + (v === 'solved' && !c.indep ? ' (same day as the check, counts as with help)' : '');
+    q.attempts.push({ id: uid('att'), at: nowISO(), day, kind, outcome: v, minutes: null, timed: false, notes: '', indep: c.indep, label });
+    ensureScheduled(q); bumpActivity(); touch(q);
+    toast(`Result saved: ${label}.`);
     commit();
   },
   skipHelp(el) { const q = getQ(el.dataset.id); q.stagesDone.help = 'skipped'; touch(q); stageGo(q, 'evaluate'); },

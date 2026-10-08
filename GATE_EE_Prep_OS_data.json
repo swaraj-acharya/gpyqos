@@ -2,12 +2,12 @@
   "app": "GATE EE Prep OS",
   "kind": "full-backup",
   "schemaVersion": 1,
-  "exportedAt": "2026-10-08T16:19:03.824Z",
+  "exportedAt": "2026-10-08T20:52:17.066Z",
   "meta": {
-    "nextQuestion": 11,
-    "nextPattern": 7,
+    "nextQuestion": 15,
+    "nextPattern": 8,
     "createdAt": "2026-10-06T19:00:07.168Z",
-    "updatedAt": "2026-10-08T16:19:03.571Z"
+    "updatedAt": "2026-10-08T20:52:16.810Z"
   },
   "settings": {
     "dayStartHour": 4,
@@ -37,9 +37,9 @@
       }
     ],
     "lastPyq": {
-      "subject": "Network Analysis",
-      "topic": "Network Basics",
-      "subtopic": "Network Elements"
+      "subject": "General Aptitude",
+      "topic": "Numerical Ability",
+      "subtopic": ""
     }
   },
   "questions": {
@@ -1471,7 +1471,7 @@
       "statement": "",
       "topicGuess": "",
       "officialAnswer": "",
-      "chatUrl": "",
+      "chatUrl": "https://gemini.google.com/app/28571203b0a3613c",
       "source": {
         "type": "GATE EE PYQ",
         "year": 1997,
@@ -1489,26 +1489,39 @@
       "concepts": [],
       "tags": [],
       "currentStage": "learn",
-      "stagesDone": {},
+      "stagesDone": {
+        "learn": "2026-10-08T17:32:13.262Z"
+      },
       "attempts": [],
       "interactions": [
         {
           "id": "int-muzqrco7-p5kt3",
           "task": "learn",
           "prompt": "ABOUT ME\nI am preparing for GATE 2027 Electrical Engineering (EE), aiming for about 60 out of 100. My theory is still weak, so do not assume I know the basics. I learn question-first: one question, the exact concepts it needs, then independent practice. I read replies under time pressure, so keep them complete but compact. Help me understand, not memorise.\n\nTHE QUESTION\n- My record: EE-Q-0010\n- Source: GATE EE PYQ, 1997, Q10, GATE EE 1997\n- This is an official GATE EE previous-year question.\n- Format: MCQ, 1 mark\n- Topic: not recorded. Infer it from the screenshot, name the GATE 2027 EE syllabus section and subtopic, and say how confident you are.\n\nATTACHED: The original question screenshot.\n\nREADING THE SCREENSHOT\n- Read the attached screenshot carefully, including any figure, circuit diagram, graph, units and answer options.\n- If any value, sign, unit, polarity, label, figure detail or condition is unreadable, cut off or ambiguous, stop and ask me about it before continuing. Never guess or invent a value or a missing condition.\n- If no screenshot is attached, ask me to attach it before doing anything else.\n\nTASK: TEACH ME THE MAIN CONCEPT BEFORE MY FIRST ATTEMPT\n\nI have NOT attempted this question yet. Prepare me for an independent first attempt.\nStrict rule: do NOT solve this question. No values computed from it, no correct option, no walk-through of its steps. If an example would give the answer away, change the setup and numbers.\n\nLENGTH: aim for about 600 to 800 words. Go longer only if a needed fact, step or condition would otherwise be lost.\n\nUse exactly these sections:\n\nIN SHORT\n2-3 lines: what this question tests and the one idea that unlocks it. No method steps, no answer.\n\n1. WHAT THIS QUESTION IS ABOUT\n- GATE 2027 EE syllabus section › subtopic, with confidence (high / medium / low).\n- The quantity being asked for, in words.\n\n2. WHAT I NEED\n- Must learn now: 1-3 ideas, one line each.\n- Prerequisites: a one-line refresher each.\n- Learn later (not needed today): names only.\n\n3. THE CONCEPT FROM ZERO\n- Intuition first, 2-4 lines.\n- Then the precise idea in 3-6 points.\n\n4. FORMULAS\nOne line each in the compact form. Add \"why:\" in one line only if it helps me remember.\n\n5. TRAPS\nAssumptions, sign conventions and beginner misconceptions together, one line each: \"trap -> correct thinking\".\n\n6. WORKED EXAMPLE\nDifferent setup and numbers from my question. Given, Find, then numbered one-line steps with units, then the answer.\n\n7. LINK TO MY QUESTION\nWhat to look for in the question and which formulas from 4 apply. No steps, no results.\n\n8. RECAP AND CHECKS\n- Up to 3 summary lines. Do not re-list the formulas.\n- 3 one-line conceptual checks.\n\nANSWERS TO CHECKS\nOne line each, at the very end.\n\nHOW TO WRITE YOUR REPLY\nGoal: a person with zero background understands everything, in the fewest words. Cut words, never facts.\n- Lead with the point. No greeting, no intro, no closing offer, no restating my question or these instructions.\n- Say each fact once. If it already appeared, write \"(see 3)\" instead of repeating it.\n- Short sentences (under 20 words), everyday words, \"- \" points instead of paragraphs.\n- Define each technical term the first time it appears, in brackets, in under 10 words. Example: phasor (an arrow that stands for a sine wave).\n- At most one analogy, 1-2 lines, only where it really helps.\n- One formula per line, in this compact form:\n  V = I*R | V voltage (V), I current (A), R resistance (ohm) | valid: linear R | not valid: diodes, arcs\n- If a section does not apply, write its title and \"- n/a\". Never pad.\n- Never drop a step, condition, sign convention or unit a beginner needs. Short is good; missing is not.\n\nFORMAT (I paste your reply into a plain-text notebook)\n- Reply in the chat as a normal message. No file, canvas, artifact or download.\n- Each section title on its own line, in capitals, exactly as I give it (for example \"1. MAIN CONCEPT\"). Content starts on the next line. Blank line between sections.\n- Plain-text maths: Z = R + jX, P = sqrt(3)*VL*IL*cos(phi). No LaTeX, no tables, no bold.\n- Units with every quantity.\n",
-          "response": "",
+          "response": "IN SHORT\nThis question tests how an ideal energy source interacts with an ideal energy storage element.\nCharging speed is dictated entirely by resistance, and ideal components have none.\n\n1. WHAT THIS QUESTION IS ABOUT\n\n* GATE 2027 EE syllabus section: Electric Circuits > Transient analysis of first-order circuits, confidence: high.\n* The time duration or time profile required to transfer charge into a capacitor.\n\n2. WHAT I NEED\n\n* Must learn now: Time constant (a time scale showing how fast a circuit responds) depends directly on resistance.\n* Must learn now: An ideal voltage source has zero internal resistance.\n* Must learn now: An ideal capacitor has zero internal series resistance.\n* Prerequisites: Capacitance relates charge and voltage through Q = C*V.\n* Prerequisites: Current is the rate of charge flow through i = C*(dv/dt).\n* Learn later: Dirac delta function, charge conservation with impulse currents.\n\n3. THE CONCEPT FROM ZERO\n\n* Imagine filling an open bucket with water from a firehose with no nozzle restriction.\n* The bucket fills immediately because nothing limits the rate of flow.\n* A physical circuit always has wire and source resistance (opposition to current flow).\n* That resistance slows down the movement of electric charges into the capacitor plates.\n* The product of resistance and capacitance sets the time constant tau.\n* If both the source and the capacitor are ideal, total loop resistance is exactly zero.\n* When resistance is zero, the time constant becomes zero seconds.\n* With zero time constant, the voltage across the capacitor matches the source in zero time.\n* Mathematically, an infinite pulse of current flows for zero duration to move the charge.\n\n4. FORMULAS\ntau = R*C | tau time constant (s), R loop resistance (ohm), C capacitance (F) | valid: linear series RC | not valid: R = 0\ni(t) = C*(dv/dt) | i current (A), C capacitance (F), dv/dt voltage change rate (V/s) | valid: ideal linear capacitor | not valid: time-varying C\nv(t) = V_s*(1 - exp(-t/tau)) | v capacitor voltage (V), V_s source voltage (V), t time (s) | valid: R > 0 series RC step input | not valid: R = 0\n5. TRAPS\n\n* Assuming charging is always exponential -> correct thinking: exponential charging requires non-zero resistance.\n* Thinking capacitors never allow instantaneous voltage changes -> correct thinking: instantaneous changes occur if current is an impulse.\n* Confusing practical laboratory capacitors with ideal theoretical elements -> correct thinking: ideal elements have strictly zero unwanted parasitics.\n\n6. WORKED EXAMPLE\nGiven: A DC voltage source with internal resistance R_s = 2 ohm connects to a capacitor C = 5 F with internal series resistance R_c = 3 ohm.\nFind: The time constant of this charging circuit.\n7. Identify the total loop resistance: R_total = R_s + R_c.\n8. Substitute the values: R_total = 2 ohm + 3 ohm = 5 ohm.\n9. Calculate time constant: tau = R_total * C.\n10. Substitute values: tau = 5 ohm * 5 F = 25 s.\nAnswer: 25 s.\n11. LINK TO MY QUESTION\n\n* Look at the word \"ideal\" applied to both the voltage source and the capacitor.\n* Consider what \"ideal\" implies for internal source resistance and internal capacitor resistance.\n* Check formula tau = R*C as loop resistance approaches zero ohms.\n* Do not apply the normal exponential curve when tau equals zero seconds.\n\n8. RECAP AND CHECKS\n\n* Non-zero resistance makes charging gradual and exponential.\n* Zero total loop resistance makes the time constant collapse to zero.\n* A zero time constant means charging completes without any measurable time delay.\n* Check 1: What is the internal resistance of an ideal independent voltage source?\n* Check 2: If a circuit has a time constant of zero seconds, does voltage take minutes or zero seconds to settle?\n* Check 3: Does exponential charging happen if total resistance in the loop is zero?\n\nANSWERS TO CHECKS\n\n* Check 1 answer: 0 ohm.\n* Check 2 answer: Zero seconds.\n* Check 3 answer: No, it cannot happen without resistance.\n\n--------------------------------------------------------------------------\n\n1. THE CONCEPT FROM ZERO\n\n* Imagine filling a water tank using a pipe.\n* The size of the tank is capacitance C (how much charge it holds per volt).\n* A narrow pipe creates friction, which is resistance R (opposition to flow).\n* If the pipe is very narrow (large R), water trickles in slowly and the tank takes a long time to fill.\n* If the pipe is infinitely wide with zero friction (R = 0 ohm), water dumps in instantly.\n* The time constant tau equals R*C and measures the circuit's reaction time in seconds.\n* It is the time needed for the capacitor voltage to reach 63.2% of its final value.\n* After about 5 time constants (5*tau), an engineer considers the capacitor fully charged (99.3%).\n* If R is cut in half, the charging time is cut in half.\n* If R is reduced all the way to 0 ohm, tau becomes 0*C = 0 seconds, meaning zero charging delay.\n\n2. THE PRECISE MATH\ntau = R*C | tau time constant (s), R resistance (ohm), C capacitance (F) | valid: first-order series RC circuits | not valid: circuits with inductors\nv(t) = V_s*(1 - exp(-t/tau)) | v(t) capacitor voltage at time t (V), V_s source voltage (V), t time elapsed (s), tau time constant (s) | valid: uncharged capacitor charging from DC step | not valid: AC sources\n\nWhy the math works:\n\n* At t = 1*tau:\nv(tau) = V_s*(1 - exp(-1)) = V_s*(1 - 0.368) = 0.632*V_s (63.2% charged).\n* At t = 5*tau:\nv(5*tau) = V_s*(1 - exp(-5)) = V_s*(1 - 0.0067) = 0.9933*V_s (99.3% charged, considered fully charged).\n* If R = 1000 ohm and C = 1 microfarad (0.000001 F):\ntau = 1000 * 0.000001 = 0.001 s (1 ms). Full charge takes 5 ms.\n* If R = 1 ohm and C = 1 microfarad:\ntau = 1 * 0.000001 = 0.000001 s (1 microsecond).\n* If R = 0 ohm (ideal wire and ideal source):\ntau = 0 * C = 0 s. Charging requires 5 * 0 = 0 seconds.\n\n3. WHY RESISTANCE CONTROLS THE SPEED\n\n* To raise capacitor voltage by dv, physical electric charge dq must travel into the plates: dq = C*dv.\n* Current i is the flow rate of charge: i = dq/dt.\n* By Ohm's law, the current in the loop is limited by resistance: i = (V_s - v_c)/R.\n* Because R sits in the denominator of current, a large R limits the flow to a tiny trickle of charge per second.\n* A tiny current means the voltage rises very slowly (small dv/dt).\n* When R = 0 ohm, the restriction vanishes, allowing the current to surge as high as necessary to deliver the charge in zero time.\n\n4. TWO QUICK CHECKS\n\n* Check 1: If R = 10 ohm and C = 2 F, what is the time constant tau?\n* Check 2: If you want a capacitor to charge faster, should you increase R or decrease R?\n\nANSWERS TO CHECKS\n\n* Check 1: tau = 10 ohm * 2 F = 20 s.\n* Check 2: Decrease R (smaller R makes tau smaller, speeding up charging).",
           "responseDraft": "",
           "at": "2026-10-08T16:19:02.503Z",
           "day": "2026-10-08",
           "used": true,
           "usedAt": "2026-10-08T16:19:03.571Z",
-          "savedAt": null,
+          "savedAt": "2026-10-08T17:32:13.262Z",
           "takeaway": "",
           "concepts": [],
           "mistakeType": "",
           "verdict": "",
           "followUp": "",
-          "status": "prompt"
+          "status": "saved",
+          "chatUrl": "",
+          "edits": [
+            {
+              "at": "2026-10-08T19:38:44.633Z",
+              "response": "IN SHORT\nThis question tests how an ideal energy source interacts with an ideal energy storage element.\nCharging speed is dictated entirely by resistance, and ideal components have none.\n\n1. WHAT THIS QUESTION IS ABOUT\n\n* GATE 2027 EE syllabus section: Electric Circuits > Transient analysis of first-order circuits, confidence: high.\n* The time duration or time profile required to transfer charge into a capacitor.\n\n2. WHAT I NEED\n\n* Must learn now: Time constant (a time scale showing how fast a circuit responds) depends directly on resistance.\n* Must learn now: An ideal voltage source has zero internal resistance.\n* Must learn now: An ideal capacitor has zero internal series resistance.\n* Prerequisites: Capacitance relates charge and voltage through Q = C*V.\n* Prerequisites: Current is the rate of charge flow through i = C*(dv/dt).\n* Learn later: Dirac delta function, charge conservation with impulse currents.\n\n3. THE CONCEPT FROM ZERO\n\n* Imagine filling an open bucket with water from a firehose with no nozzle restriction.\n* The bucket fills immediately because nothing limits the rate of flow.\n* A physical circuit always has wire and source resistance (opposition to current flow).\n* That resistance slows down the movement of electric charges into the capacitor plates.\n* The product of resistance and capacitance sets the time constant tau.\n* If both the source and the capacitor are ideal, total loop resistance is exactly zero.\n* When resistance is zero, the time constant becomes zero seconds.\n* With zero time constant, the voltage across the capacitor matches the source in zero time.\n* Mathematically, an infinite pulse of current flows for zero duration to move the charge.\n\n4. FORMULAS\ntau = R*C | tau time constant (s), R loop resistance (ohm), C capacitance (F) | valid: linear series RC | not valid: R = 0\ni(t) = C*(dv/dt) | i current (A), C capacitance (F), dv/dt voltage change rate (V/s) | valid: ideal linear capacitor | not valid: time-varying C\nv(t) = V_s*(1 - exp(-t/tau)) | v capacitor voltage (V), V_s source voltage (V), t time (s) | valid: R > 0 series RC step input | not valid: R = 0\n5. TRAPS\n\n* Assuming charging is always exponential -> correct thinking: exponential charging requires non-zero resistance.\n* Thinking capacitors never allow instantaneous voltage changes -> correct thinking: instantaneous changes occur if current is an impulse.\n* Confusing practical laboratory capacitors with ideal theoretical elements -> correct thinking: ideal elements have strictly zero unwanted parasitics.\n\n6. WORKED EXAMPLE\nGiven: A DC voltage source with internal resistance R_s = 2 ohm connects to a capacitor C = 5 F with internal series resistance R_c = 3 ohm.\nFind: The time constant of this charging circuit.\n7. Identify the total loop resistance: R_total = R_s + R_c.\n8. Substitute the values: R_total = 2 ohm + 3 ohm = 5 ohm.\n9. Calculate time constant: tau = R_total * C.\n10. Substitute values: tau = 5 ohm * 5 F = 25 s.\nAnswer: 25 s.\n11. LINK TO MY QUESTION\n\n* Look at the word \"ideal\" applied to both the voltage source and the capacitor.\n* Consider what \"ideal\" implies for internal source resistance and internal capacitor resistance.\n* Check formula tau = R*C as loop resistance approaches zero ohms.\n* Do not apply the normal exponential curve when tau equals zero seconds.\n\n8. RECAP AND CHECKS\n\n* Non-zero resistance makes charging gradual and exponential.\n* Zero total loop resistance makes the time constant collapse to zero.\n* A zero time constant means charging completes without any measurable time delay.\n* Check 1: What is the internal resistance of an ideal independent voltage source?\n* Check 2: If a circuit has a time constant of zero seconds, does voltage take minutes or zero seconds to settle?\n* Check 3: Does exponential charging happen if total resistance in the loop is zero?\n\nANSWERS TO CHECKS\n\n* Check 1 answer: 0 ohm.\n* Check 2 answer: Zero seconds.\n* Check 3 answer: No, it cannot happen without resistance.",
+              "verdict": "",
+              "takeaway": "",
+              "followUp": ""
+            }
+          ],
+          "editedAt": "2026-10-08T19:38:44.633Z"
         }
       ],
       "patternIds": [],
@@ -1525,7 +1538,241 @@
         "history": []
       },
       "createdAt": "2026-10-08T16:19:00.120Z",
-      "updatedAt": "2026-10-08T16:19:03.571Z"
+      "updatedAt": "2026-10-08T19:51:47.972Z"
+    },
+    "EE-Q-0011": {
+      "id": "EE-Q-0011",
+      "title": "",
+      "statement": "",
+      "topicGuess": "",
+      "officialAnswer": "",
+      "chatUrl": "https://gemini.google.com/app/a4b2953e2aa7bb13",
+      "source": {
+        "type": "GATE EE PYQ",
+        "year": 1997,
+        "questionNumber": "11",
+        "reference": "GATE EE 1997"
+      },
+      "pyq": {
+        "subject": "Network Analysis",
+        "topic": "Network Basics",
+        "subtopic": "Network Elements"
+      },
+      "qType": "MCQ",
+      "marks": 1,
+      "syllabusLinks": [],
+      "concepts": [],
+      "tags": [],
+      "currentStage": "pattern",
+      "stagesDone": {
+        "learn": "2026-10-08T19:53:43.772Z",
+        "evaluate": "skipped"
+      },
+      "attempts": [
+        {
+          "id": "att-muzyq1se-azrkx",
+          "at": "2026-10-08T20:01:58.670Z",
+          "day": "2026-10-08",
+          "kind": "first",
+          "outcome": "solved",
+          "minutes": null,
+          "timed": false,
+          "notes": "",
+          "indep": true,
+          "label": "Solved independently after the concept lesson"
+        }
+      ],
+      "interactions": [
+        {
+          "id": "int-muzydtt4-0q6ih",
+          "task": "learn",
+          "prompt": "ABOUT ME\nI am preparing for GATE 2027 Electrical Engineering (EE), aiming for about 60 out of 100. My theory is still weak, so do not assume I know the basics. I learn question-first: one question, the exact concepts it needs, then independent practice. I read replies under time pressure, so keep them complete but compact. Help me understand, not memorise.\n\nTHE QUESTION\n- My record: EE-Q-0011\n- Source: GATE EE PYQ, 1997, Q11, GATE EE 1997\n- This is an official GATE EE previous-year question.\n- Format: MCQ, 1 mark\n- Topic: not recorded. Infer it from the screenshot, name the GATE 2027 EE syllabus section and subtopic, and say how confident you are.\n\nATTACHED: The original question screenshot.\n\nREADING THE SCREENSHOT\n- Read the attached screenshot carefully, including any figure, circuit diagram, graph, units and answer options.\n- If any value, sign, unit, polarity, label, figure detail or condition is unreadable, cut off or ambiguous, stop and ask me about it before continuing. Never guess or invent a value or a missing condition.\n- If no screenshot is attached, ask me to attach it before doing anything else.\n\nTASK: TEACH ME THE MAIN CONCEPT BEFORE MY FIRST ATTEMPT\n\nI have NOT attempted this question yet. Prepare me for an independent first attempt.\nStrict rule: do NOT solve this question. No values computed from it, no correct option, no walk-through of its steps. If an example would give the answer away, change the setup and numbers.\n\nLENGTH: aim for about 600 to 800 words. Go longer only if a needed fact, step or condition would otherwise be lost.\n\nUse exactly these sections:\n\nIN SHORT\n2-3 lines: what this question tests and the one idea that unlocks it. No method steps, no answer.\n\n1. WHAT THIS QUESTION IS ABOUT\n- GATE 2027 EE syllabus section › subtopic, with confidence (high / medium / low).\n- The quantity being asked for, in words.\n\n2. WHAT I NEED\n- Must learn now: 1-3 ideas, one line each.\n- Prerequisites: a one-line refresher each.\n- Learn later (not needed today): names only.\n\n3. THE CONCEPT FROM ZERO\n- Intuition first, 2-4 lines.\n- Then the precise idea in 3-6 points.\n\n4. FORMULAS\nOne line each in the compact form. Add \"why:\" in one line only if it helps me remember.\n\n5. TRAPS\nAssumptions, sign conventions and beginner misconceptions together, one line each: \"trap -> correct thinking\".\n\n6. WORKED EXAMPLE\nDifferent setup and numbers from my question. Given, Find, then numbered one-line steps with units, then the answer.\n\n7. LINK TO MY QUESTION\nWhat to look for in the question and which formulas from 4 apply. No steps, no results.\n\n8. RECAP AND CHECKS\n- Up to 3 summary lines. Do not re-list the formulas.\n- 3 one-line conceptual checks.\n\nANSWERS TO CHECKS\nOne line each, at the very end.\n\nHOW TO WRITE YOUR REPLY\nGoal: a person with zero background understands everything, in the fewest words. Cut words, never facts.\n- Lead with the point. No greeting, no intro, no closing offer, no restating my question or these instructions.\n- Say each fact once. If it already appeared, write \"(see 3)\" instead of repeating it.\n- Short sentences (under 20 words), everyday words, \"- \" points instead of paragraphs.\n- Define each technical term the first time it appears, in brackets, in under 10 words. Example: phasor (an arrow that stands for a sine wave).\n- At most one analogy, 1-2 lines, only where it really helps.\n- One formula per line, in this compact form:\n  V = I*R | V voltage (V), I current (A), R resistance (ohm) | valid: linear R | not valid: diodes, arcs\n- If a section does not apply, write its title and \"- n/a\". Never pad.\n- Never drop a step, condition, sign convention or unit a beginner needs. Short is good; missing is not.\n\nFORMAT (I paste your reply into a plain-text notebook)\n- Reply in the chat as a normal message. No file, canvas, artifact or download.\n- Each section title on its own line, in capitals, exactly as I give it (for example \"1. MAIN CONCEPT\"). Content starts on the next line. Blank line between sections.\n- Plain-text maths: Z = R + jX, P = sqrt(3)*VL*IL*cos(phi). No LaTeX, no tables, no bold.\n- Units with every quantity.\n",
+          "response": "IN SHORT\nThis question tests the physical model of an energy source by asking how real-world energy loss is accounted for. The single unlocking idea is that internal loss reduces terminal current as terminal voltage rises, which requires a diversion path.\n\n1. WHAT THIS QUESTION IS ABOUT\n\n* Syllabus: Electric Circuits > Network Elements (Ideal and practical independent sources), confidence: high.\n* The quantity being asked for: the standard two-element circuit model used to represent a real (practical) current source.\n\n2. WHAT I NEED\n\n* Must learn now:\n* An ideal current source forces a fixed current regardless of the voltage across it.\n* A practical current source loses some of its output current through internal leakage when connected to a load.\n* Parallel branches share voltage and split total current.\n\n\n* Prerequisites:\n* Kirchhoff's Current Law (sum of currents entering a node equals sum leaving).\n* Ohm's Law (current through a resistor is directly proportional to the voltage across it).\n\n\n* Learn later:\n* Source transformation between practical Thevenin and Norton models.\n* Maximum power transfer theorem for practical sources.\n\n\n\n3. THE CONCEPT FROM ZERO\n\n* Intuition:\n* Imagine a pump pushing 10 liters of water per second through a main pipe.\n* If the pipe develops an internal leak back to the reservoir, less water reaches the output.\n* The higher the pressure (voltage) at the output, the more water leaks away internally.\n\n\n* The precise idea:\n* An ideal current source outputs a constant current $I_s$ under every possible terminal voltage.\n* In reality, physical current sources cannot maintain constant current against high opposing voltages because of internal conduction paths.\n* To model this drop in delivered current, a finite internal resistance $R_{int}$ is placed in parallel with the ideal current source.\n* When a load is connected, terminal voltage $V$ appears across both the source and this internal path.\n* The internal path diverts a leakage current equal to $V / R_{int}$ away from the load terminals.\n* A series resistor cannot model this effect because components in series carry the exact same current, leaving the delivered current completely unchanged.\n\n\n\n4. FORMULAS\n\n* $I_L = I_s - (V_L / R_{int})$ | $I_L$ load current (A), $I_s$ source current (A), $V_L$ terminal voltage (V), $R_{int}$ internal resistance (ohm) | valid: linear practical source | not valid: ideal source where $R_{int}$ approaches infinity\nwhy: expresses KCL at the output terminal showing that delivered current drops as terminal voltage rises.\n* $R_{int\\_ideal} = \\text{infinity}$ | $R_{int\\_ideal}$ internal resistance of ideal current source (ohm) | valid: ideal current source | not valid: practical physical source\nwhy: an open circuit ensures zero diverted leakage current regardless of terminal voltage.\n\n5. TRAPS\n\n* Assuming current sources behave like voltage sources -> voltage sources drop voltage via series resistance; current sources drop current via parallel resistance.\n* Putting resistance in series with an ideal current source -> series elements share identical current, so a series resistor does not change terminal current at all.\n* Assuming ideal current source resistance is zero -> zero resistance belongs to an ideal voltage source; an ideal current source has infinite internal resistance.\n\n6. WORKED EXAMPLE\nGiven:\n\n* An ideal current source delivering $I_s = 8\\text{ A}$.\n* An internal parallel resistance $R_{int} = 20\\text{ ohm}$.\n* A load connected across the terminals developing a terminal voltage $V_L = 40\\text{ V}$.\n\nFind:\n\n* The actual current $I_L$ delivered to the external load.\n\nSteps:\n\n1. Identify internal branch voltage: $V_{int} = V_L = 40\\text{ V}$.\n2. Calculate internal leakage current: $I_{leak} = 40\\text{ V} / 20\\text{ ohm} = 2\\text{ A}$.\n3. Apply node current balance: $I_L = 8\\text{ A} - 2\\text{ A} = 6\\text{ A}$.\n\nAnswer:\n$I_L = 6\\text{ A}$.\n\n7. LINK TO MY QUESTION\n\n* Look at the question text asking specifically for the standard representation of a \"practical current source\".\n* Consider how internal resistance must be connected to an ideal current source so that it actually affects the terminal current delivered to an outside circuit.\n\n8. RECAP AND CHECKS\n\n* Ideal sources maintain their set value without loss; practical sources include an internal resistor to model loss.\n* Practical voltage sources use series resistance, while practical current sources use parallel resistance.\n* An ideal current source corresponds to an internal parallel resistance of infinity.\n\nChecks:\n\n1. If a 5 A ideal current source has a 10 ohm resistor placed in series with it, what current flows out of the terminal?\n2. What value of internal resistance makes a practical current source behave like an ideal current source?\n3. Why does placing a resistor in series with an ideal current source fail to represent internal current leakage?\n\nANSWERS TO CHECKS\n\n1. Exactly 5 A, because elements connected in series must carry identical current.\n2. An infinite resistance (an open circuit).\n3. Because the series connection forces the full ideal current to reach the external terminals, causing zero reduction in output current.",
+          "responseDraft": "",
+          "at": "2026-10-08T19:52:28.456Z",
+          "day": "2026-10-08",
+          "used": true,
+          "usedAt": "2026-10-08T19:52:29.572Z",
+          "savedAt": "2026-10-08T19:53:43.772Z",
+          "takeaway": "",
+          "concepts": [],
+          "mistakeType": "",
+          "verdict": "",
+          "followUp": "",
+          "status": "saved",
+          "chatUrl": ""
+        },
+        {
+          "id": "int-muzyqe2k-8w778",
+          "task": "pattern",
+          "prompt": "ABOUT ME\nI am preparing for GATE 2027 Electrical Engineering (EE), aiming for about 60 out of 100. My theory is still weak, so do not assume I know the basics. I learn question-first: one question, the exact concepts it needs, then independent practice. I read replies under time pressure, so keep them complete but compact. Help me understand, not memorise.\n\nTHE QUESTION\n- My record: EE-Q-0011\n- Source: GATE EE PYQ, 1997, Q11, GATE EE 1997\n- This is an official GATE EE previous-year question.\n- Format: MCQ, 1 mark\n- Topic: not recorded. Infer it from the screenshot, name the GATE 2027 EE syllabus section and subtopic, and say how confident you are.\n\nATTACHED: The original question screenshot.\n\nREADING THE SCREENSHOT\n- Read the attached screenshot carefully, including any figure, circuit diagram, graph, units and answer options.\n- If any value, sign, unit, polarity, label, figure detail or condition is unreadable, cut off or ambiguous, stop and ask me about it before continuing. Never guess or invent a value or a missing condition.\n- If no screenshot is attached, ask me to attach it before doing anything else.\n\nTASK: TEACH ME TO RECOGNISE THIS QUESTION'S PATTERN\n\nI have attempted this question and reviewed a solution. Teach me the family of problems it belongs to, so I spot the method in an unfamiliar exam question. A topic name alone is not enough.\n\nLENGTH: aim for about 450 to 600 words. Go longer only if a needed fact, step or condition would otherwise be lost.\n\nUse exactly these 13 numbered titles; I save them as a pattern card. Each section: up to 4 one-line points, except 5, which may have up to 8 steps.\n\n1. PATTERN NAME\nShort and specific (for example \"Max power transfer with a dependent source\", not \"Network theorems\").\n\n2. QUESTION ARCHETYPE\nThe general form of questions in this family.\n\n3. RECOGNITION CLUES\nWords, given data, figure features or requested quantities that signal this pattern.\n\n4. GOVERNING PRINCIPLE\n\n5. REUSABLE METHOD\nNumbered steps that work for any question in the family.\n\n6. ASSUMPTIONS\n\n7. LIMITATIONS\nWhen the method stops working.\n\n8. COMMON TRAPS\n\n9. SIMILAR-LOOKING PROBLEMS\nLook-alikes that need a different method, and how to tell them apart. If more than one approach is plausible here, say how to choose.\n\n10. WHEN THE METHOD CHANGES\nConditions that switch the method (dependent source, non-ideal element, unbalanced load, and so on).\n\n11. USEFUL VARIATIONS\nHow examiners vary this question.\n\n12. SYLLABUS LINKS\nGATE 2027 EE section and subtopic(s).\n\n13. MEMORY HOOK\nOne line in exactly this form: \"When I see ___, check ___ because ___.\"\n\nHOW TO WRITE YOUR REPLY\nGoal: a person with zero background understands everything, in the fewest words. Cut words, never facts.\n- Lead with the point. No greeting, no intro, no closing offer, no restating my question or these instructions.\n- Say each fact once. If it already appeared, write \"(see 3)\" instead of repeating it.\n- Short sentences (under 20 words), everyday words, \"- \" points instead of paragraphs.\n- Define each technical term the first time it appears, in brackets, in under 10 words. Example: phasor (an arrow that stands for a sine wave).\n- At most one analogy, 1-2 lines, only where it really helps.\n- One formula per line, in this compact form:\n  V = I*R | V voltage (V), I current (A), R resistance (ohm) | valid: linear R | not valid: diodes, arcs\n- If a section does not apply, write its title and \"- n/a\". Never pad.\n- Never drop a step, condition, sign convention or unit a beginner needs. Short is good; missing is not.\n\nFORMAT (I paste your reply into a plain-text notebook)\n- Reply in the chat as a normal message. No file, canvas, artifact or download.\n- Each section title on its own line, in capitals, exactly as I give it (for example \"1. MAIN CONCEPT\"). Content starts on the next line. Blank line between sections.\n- Plain-text maths: Z = R + jX, P = sqrt(3)*VL*IL*cos(phi). No LaTeX, no tables, no bold.\n- Units with every quantity.\n",
+          "response": "1. PATTERN NAME\nPractical Source Internal Resistance Topology\n2. QUESTION ARCHETYPE\n\n* A qualitative or quantitative question describing a real (non-ideal) independent energy source.\n* Asks for its standard schematic model, terminal behavior, or internal resistance placement.\n\n3. RECOGNITION CLUES\n\n* Words: \"practical current source\", \"practical voltage source\", \"internal resistance\", \"non-ideal source\".\n* Circuit features: an ideal source paired with a single internal resistor.\n* Options: series versus parallel resistor pairings, or zero versus infinite resistance values.\n\n4. GOVERNING PRINCIPLE\n\n* Internal losses must cause delivered output quantity to degrade under load.\n* Parallel resistance diverts current away from the load via KCL.\n* Series resistance drops voltage before reaching the load via KVL.\n\n5. REUSABLE METHOD\n6. Identify whether the base generator is a current source or voltage source.\n7. Recall the quantity being delivered: current for current source, voltage for voltage source.\n8. Test the series connection: does adding series resistance reduce the delivered current? No, series current is identical everywhere.\n9. Test the parallel connection: does adding parallel resistance provide a bypass path for current? Yes, by KCL.\n10. Conclude: a practical current source uses an ideal current source in parallel with an internal resistance.\n11. For ideal behavior, take the limit that eliminates the loss: parallel resistance goes to infinity (open circuit).\n12. ASSUMPTIONS\n\n* The internal resistance is linear and bilateral.\n* The ideal source maintains its specified value independent of terminal conditions.\n* Internal parasitics like capacitance and inductance are neglected at DC/low frequencies.\n\n7. LIMITATIONS\n\n* Breaks down at high frequencies where shunt capacitance or lead inductance dominates.\n* Fails for non-linear power supplies with active feedback regulation (constant-power loads).\n\n8. COMMON TRAPS\n\n* Confusing voltage source models with current source models -> voltage sources use series resistance, current sources use parallel resistance.\n* Thinking ideal current sources have zero resistance -> zero resistance shorts the terminal; ideal current sources have infinite resistance.\n* Forgetting that series resistance with an ideal current source is redundant -> it changes nothing at external terminals.\n\n9. SIMILAR-LOOKING PROBLEMS\n\n* Thevenin vs. Norton equivalent circuits: Norton models practical current sources, Thevenin models practical voltage sources.\n* Practical meters (ammeter vs. voltmeter): ideal ammeter is 0 ohm (series), ideal voltmeter is infinity (parallel); real meters deviate conversely.\n* Choose Norton/parallel whenever current delivery is the primary active quantity.\n\n10. WHEN THE METHOD CHANGES\n\n* If the source is dependent: internal resistance is found via test voltage/current ratio (V_test / I_test), not inspection.\n* If high frequency is specified: replace pure resistance with parallel impedance (R in parallel with C).\n* If source conversion is needed: use Norton-Thevenin transformation ($V_s = I_s * R_p$, $R_s = R_p$).\n\n11. USEFUL VARIATIONS\n\n* Asking for the internal resistance value of an ideal current source (infinity).\n* Asking for the equivalent Norton model of a real battery or solar cell.\n* Giving terminal V-I coordinates under two loads to calculate the internal parallel resistance.\n\n12. SYLLABUS LINKS\n\n* Section: Electric Circuits\n* Subtopics: Network Elements (Ideal and practical independent sources), Network Theorems (Norton equivalent).\n\n13. MEMORY HOOK\n\n* When I see practical current source, check parallel resistance because current splits across parallel branches.",
+          "responseDraft": "",
+          "at": "2026-10-08T20:02:14.588Z",
+          "day": "2026-10-08",
+          "used": true,
+          "usedAt": "2026-10-08T20:02:15.604Z",
+          "savedAt": "2026-10-08T20:02:48.154Z",
+          "takeaway": "",
+          "concepts": [],
+          "mistakeType": "",
+          "verdict": "",
+          "followUp": "",
+          "status": "saved",
+          "chatUrl": "https://gemini.google.com/app/a4b2953e2aa7bb13"
+        }
+      ],
+      "patternIds": [
+        "EE-P-007"
+      ],
+      "variations": [],
+      "mistakes": [],
+      "takeaway": "",
+      "formulas": "",
+      "notes": "",
+      "relearn": false,
+      "timerStart": null,
+      "revision": {
+        "stage": 0,
+        "nextReviewAt": "2026-10-09",
+        "history": []
+      },
+      "createdAt": "2026-10-08T19:52:26.537Z",
+      "updatedAt": "2026-10-08T20:02:51.637Z"
+    },
+    "EE-Q-0012": {
+      "id": "EE-Q-0012",
+      "title": "",
+      "statement": "",
+      "topicGuess": "",
+      "officialAnswer": "",
+      "chatUrl": "",
+      "source": {
+        "type": "GATE EE PYQ",
+        "year": 1997,
+        "questionNumber": "12",
+        "reference": "GATE EE 1997"
+      },
+      "pyq": {
+        "subject": "Network Analysis",
+        "topic": "Network Basics",
+        "subtopic": "Network Elements"
+      },
+      "qType": "MCQ",
+      "marks": 2,
+      "syllabusLinks": [],
+      "concepts": [],
+      "tags": [],
+      "currentStage": "attempt",
+      "stagesDone": {
+        "learn": "2026-10-08T20:06:21.621Z"
+      },
+      "attempts": [
+        {
+          "id": "att-muzz6iyz-lhc28",
+          "at": "2026-10-08T20:14:47.435Z",
+          "day": "2026-10-08",
+          "kind": "first",
+          "outcome": "solved",
+          "minutes": null,
+          "timed": false,
+          "notes": "",
+          "indep": true,
+          "label": "Solved independently after the concept lesson"
+        }
+      ],
+      "interactions": [
+        {
+          "id": "int-muzysia2-uv7r6",
+          "task": "learn",
+          "prompt": "ABOUT ME\nI am preparing for GATE 2027 Electrical Engineering (EE), aiming for about 60 out of 100. My theory is still weak, so do not assume I know the basics. I learn question-first: one question, the exact concepts it needs, then independent practice. I read replies under time pressure, so keep them complete but compact. Help me understand, not memorise.\n\nTHE QUESTION\n- My record: EE-Q-0012\n- Source: GATE EE PYQ, 1997, Q12, GATE EE 1997\n- This is an official GATE EE previous-year question.\n- Format: MCQ, 2 marks\n- Topic: not recorded. Infer it from the screenshot, name the GATE 2027 EE syllabus section and subtopic, and say how confident you are.\n\nATTACHED: The original question screenshot.\n\nREADING THE SCREENSHOT\n- Read the attached screenshot carefully, including any figure, circuit diagram, graph, units and answer options.\n- If any value, sign, unit, polarity, label, figure detail or condition is unreadable, cut off or ambiguous, stop and ask me about it before continuing. Never guess or invent a value or a missing condition.\n- If no screenshot is attached, ask me to attach it before doing anything else.\n\nTASK: TEACH ME THE MAIN CONCEPT BEFORE MY FIRST ATTEMPT\n\nI have NOT attempted this question yet. Prepare me for an independent first attempt.\nStrict rule: do NOT solve this question. No values computed from it, no correct option, no walk-through of its steps. If an example would give the answer away, change the setup and numbers.\n\nLENGTH: aim for about 600 to 800 words. Go longer only if a needed fact, step or condition would otherwise be lost.\n\nUse exactly these sections:\n\nIN SHORT\n2-3 lines: what this question tests and the one idea that unlocks it. No method steps, no answer.\n\n1. WHAT THIS QUESTION IS ABOUT\n- GATE 2027 EE syllabus section › subtopic, with confidence (high / medium / low).\n- The quantity being asked for, in words.\n\n2. WHAT I NEED\n- Must learn now: 1-3 ideas, one line each.\n- Prerequisites: a one-line refresher each.\n- Learn later (not needed today): names only.\n\n3. THE CONCEPT FROM ZERO\n- Intuition first, 2-4 lines.\n- Then the precise idea in 3-6 points.\n\n4. FORMULAS\nOne line each in the compact form. Add \"why:\" in one line only if it helps me remember.\n\n5. TRAPS\nAssumptions, sign conventions and beginner misconceptions together, one line each: \"trap -> correct thinking\".\n\n6. WORKED EXAMPLE\nDifferent setup and numbers from my question. Given, Find, then numbered one-line steps with units, then the answer.\n\n7. LINK TO MY QUESTION\nWhat to look for in the question and which formulas from 4 apply. No steps, no results.\n\n8. RECAP AND CHECKS\n- Up to 3 summary lines. Do not re-list the formulas.\n- 3 one-line conceptual checks.\n\nANSWERS TO CHECKS\nOne line each, at the very end.\n\nHOW TO WRITE YOUR REPLY\nGoal: a person with zero background understands everything, in the fewest words. Cut words, never facts.\n- Lead with the point. No greeting, no intro, no closing offer, no restating my question or these instructions.\n- Say each fact once. If it already appeared, write \"(see 3)\" instead of repeating it.\n- Short sentences (under 20 words), everyday words, \"- \" points instead of paragraphs.\n- Define each technical term the first time it appears, in brackets, in under 10 words. Example: phasor (an arrow that stands for a sine wave).\n- At most one analogy, 1-2 lines, only where it really helps.\n- One formula per line, in this compact form:\n  V = I*R | V voltage (V), I current (A), R resistance (ohm) | valid: linear R | not valid: diodes, arcs\n- If a section does not apply, write its title and \"- n/a\". Never pad.\n- Never drop a step, condition, sign convention or unit a beginner needs. Short is good; missing is not.\n\nFORMAT (I paste your reply into a plain-text notebook)\n- Reply in the chat as a normal message. No file, canvas, artifact or download.\n- Each section title on its own line, in capitals, exactly as I give it (for example \"1. MAIN CONCEPT\"). Content starts on the next line. Blank line between sections.\n- Plain-text maths: Z = R + jX, P = sqrt(3)*VL*IL*cos(phi). No LaTeX, no tables, no bold.\n- Units with every quantity.\n",
+          "response": "IN SHORT\nThis question tests element identification from time-domain waveforms. The unlocking idea is comparing the mathematical derivative or integral relationship between voltage and current waveforms.\n\n1. WHAT THIS QUESTION IS ABOUT\n\n* GATE 2027 EE syllabus section: Electric Circuits > Network Elements (V-I characteristics of R, L, C), confidence: high.\n* The identity of the circuit element and its numerical parameter value.\n\n2. WHAT I NEED\n\n* Must learn now: Inductor voltage is proportional to the rate of change of current.\n* Must learn now: Capacitor current is proportional to the rate of change of voltage.\n* Prerequisites: The slope of a straight line on a graph equals change in vertical variable divided by change in time.\n* Learn later: State equations, energy storage calculations from waveforms.\n\n3. THE CONCEPT FROM ZERO\n\n* Imagine water in a pipe: pressure (voltage) pushes mass (current).\n* A heavy flywheel takes constant push to linearly ramp up its speed; this is an inductor (an energy storage element using magnetic fields).\n* A constant voltage producing a ramp current signals an inductor.\n* Conversely, pumping a constant flow of water into a tank causes the water level (voltage) to ramp up linearly.\n* A constant current producing a ramp voltage signals a capacitor (an energy storage element using electric fields).\n* When the driving signal drops to zero, an inductor maintains constant current because di/dt becomes zero.\n* The constant scaling factor relating the flat value to the ramp slope gives the exact component value.\n\n4. FORMULAS\nv(t) = L * (di/dt) | v voltage (V), L inductance (H), di/dt current rate of change (A/s) | valid: ideal linear inductor | not valid: saturated cores\ni(t) = C * (dv/dt) | i current (A), C capacitance (F), dv/dt voltage rate of change (V/s) | valid: ideal linear capacitor | not valid: non-linear dielectrics\nm = (y2 - y1) / (t2 - t1) | m slope of a line, y2 - y1 change in signal, t2 - t1 elapsed time (s) | valid: straight-line segments | not valid: curved waveforms | why: basic definition of a derivative on a linear segment\n5. TRAPS\n\n* Mixing up L and C formulas -> correct thinking: L has derivative on current v = L*(di/dt), C has derivative on voltage i = C*(dv/dt).\n* Calculating slope as horizontal over vertical -> correct thinking: slope is strictly vertical change divided by horizontal time change.\n* Looking at the constant region after 2 s and getting confused -> correct thinking: constant current means di/dt = 0 A/s, which matches v = 0 V perfectly.\n\n6. WORKED EXAMPLE\nGiven: A passive two-terminal element has a current waveform that is a square pulse of 6 A from t = 0 s to t = 3 s, and 0 A afterwards. The voltage across it rises linearly from 0 V at t = 0 s to 12 V at t = 3 s, and stays at 12 V afterwards.\nFind: Identify the element and calculate its value.\n7. Identify the relationship: Current is constant (6 A) while voltage is a ramp from 0 s to 3 s.\n8. An element where constant current causes a linearly rising voltage is a capacitor.\n9. Calculate the voltage slope: dv/dt = (12 V - 0 V) / (3 s - 0 s) = 4 V/s.\n10. Recall capacitor relation: i(t) = C * (dv/dt).\n11. Substitute the values: 6 A = C * (4 V/s).\n12. Solve for C: C = 6 A / (4 V/s) = 1.5 F.\n13. Verify for t > 3 s: dv/dt = 0 V/s, so i = 1.5 F * 0 V/s = 0 A, which matches the given 0 A.\nAnswer: Capacitor of value 1.5 F.\n14. LINK TO MY QUESTION\n\n* Look at the shape of V(t): observe whether it is a flat constant pulse or a ramp between 0 s and 2 s.\n* Look at the shape of i(t): observe whether it is a flat constant pulse or a ramp between 0 s and 2 s.\n* Match which variable has the derivative (the ramp whose slope is constant) to select between the inductor and capacitor formulas from 4.\n* Calculate the numerical slope of the ramp segment over the interval 0 s to 2 s.\n* Substitute the constant level and the computed slope into the chosen formula to solve for the element value.\n\n8. RECAP AND CHECKS\n\n* Constant voltage pairing with a ramp current defines an inductor.\n* Constant current pairing with a ramp voltage defines a capacitor.\n* The component value is the ratio of the constant waveform level to the slope of the ramp waveform.\n* Check 1: If current through an inductor is held strictly constant, what is the voltage across it?\n* Check 2: If a voltage waveform across an element is a ramp with a slope of 5 V/s and current is constant at 10 A, is the element an inductor or a capacitor?\n* Check 3: Does a flat horizontal line on an oscilloscope graph have a slope of zero or infinity?\n\nANSWERS TO CHECKS\n\n* Check 1 answer: 0 V.\n* Check 2 answer: Capacitor.\n* Check 3 answer: Zero.",
+          "responseDraft": "",
+          "at": "2026-10-08T20:03:53.354Z",
+          "day": "2026-10-08",
+          "used": true,
+          "usedAt": "2026-10-08T20:03:54.786Z",
+          "savedAt": "2026-10-08T20:06:21.620Z",
+          "takeaway": "",
+          "concepts": [],
+          "mistakeType": "",
+          "verdict": "",
+          "followUp": "",
+          "status": "saved",
+          "chatUrl": ""
+        }
+      ],
+      "patternIds": [],
+      "variations": [],
+      "mistakes": [],
+      "takeaway": "",
+      "formulas": "",
+      "notes": "",
+      "relearn": false,
+      "timerStart": null,
+      "revision": {
+        "stage": 0,
+        "nextReviewAt": "2026-10-09",
+        "history": []
+      },
+      "createdAt": "2026-10-08T20:03:24.454Z",
+      "updatedAt": "2026-10-08T20:14:47.435Z"
+    },
+    "EE-Q-0014": {
+      "id": "EE-Q-0014",
+      "title": "",
+      "statement": "",
+      "topicGuess": "",
+      "officialAnswer": "",
+      "chatUrl": "",
+      "source": {
+        "type": "GATE EE PYQ",
+        "year": 2026,
+        "questionNumber": "1",
+        "reference": "GATE EE 2026"
+      },
+      "pyq": {
+        "subject": "General Aptitude",
+        "topic": "Numerical Ability",
+        "subtopic": ""
+      },
+      "qType": "",
+      "marks": null,
+      "syllabusLinks": [],
+      "concepts": [],
+      "tags": [],
+      "currentStage": "learn",
+      "stagesDone": {},
+      "attempts": [
+        {
+          "id": "att-mv00iqlm-nk6xd",
+          "at": "2026-10-08T20:52:16.810Z",
+          "day": "2026-10-08",
+          "kind": "first",
+          "outcome": "solved",
+          "minutes": null,
+          "timed": false,
+          "notes": "",
+          "indep": true,
+          "label": "Got it right"
+        }
+      ],
+      "interactions": [],
+      "patternIds": [],
+      "variations": [],
+      "mistakes": [],
+      "takeaway": "",
+      "formulas": "",
+      "notes": "",
+      "relearn": false,
+      "timerStart": null,
+      "revision": {
+        "stage": 0,
+        "nextReviewAt": "2026-10-09",
+        "history": []
+      },
+      "createdAt": "2026-10-08T20:32:07.731Z",
+      "updatedAt": "2026-10-08T20:52:16.810Z"
     }
   },
   "patterns": {
@@ -1642,6 +1889,25 @@
       "hook": "When I see three pairs of Star network measurements, check the grand sum because an open leg leaves a pure series path.",
       "createdAt": "2026-10-08T15:57:44.754Z",
       "updatedAt": "2026-10-08T15:57:44.754Z"
+    },
+    "EE-P-007": {
+      "id": "EE-P-007",
+      "name": "Practical Source Internal Resistance Topology",
+      "archetype": "* A qualitative or quantitative question describing a real (non-ideal) independent energy source.\n* Asks for its standard schematic model, terminal behavior, or internal resistance placement.",
+      "clues": "* Words: \"practical current source\", \"practical voltage source\", \"internal resistance\", \"non-ideal source\".\n* Circuit features: an ideal source paired with a single internal resistor.\n* Options: series versus parallel resistor pairings, or zero versus infinite resistance values.",
+      "principle": "* Internal losses must cause delivered output quantity to degrade under load.\n* Parallel resistance diverts current away from the load via KCL.\n* Series resistance drops voltage before reaching the load via KVL.",
+      "procedure": "6. Identify whether the base generator is a current source or voltage source.\n7. Recall the quantity being delivered: current for current source, voltage for voltage source.\n8. Test the series connection: does adding series resistance reduce the delivered current? No, series current is identical everywhere.\n9. Test the parallel connection: does adding parallel resistance provide a bypass path for current? Yes, by KCL.\n10. Conclude: a practical current source uses an ideal current source in parallel with an internal resistance.\n11. For ideal behavior, take the limit that eliminates the loss: parallel resistance goes to infinity (open circuit).",
+      "assumptions": "",
+      "limitations": "* Breaks down at high frequencies where shunt capacitance or lead inductance dominates.\n* Fails for non-linear power supplies with active feedback regulation (constant-power loads).",
+      "traps": "* Confusing voltage source models with current source models -> voltage sources use series resistance, current sources use parallel resistance.\n* Thinking ideal current sources have zero resistance -> zero resistance shorts the terminal; ideal current sources have infinite resistance.\n* Forgetting that series resistance with an ideal current source is redundant -> it changes nothing at external terminals.",
+      "similar": "* Thevenin vs. Norton equivalent circuits: Norton models practical current sources, Thevenin models practical voltage sources.\n* Practical meters (ammeter vs. voltmeter): ideal ammeter is 0 ohm (series), ideal voltmeter is infinity (parallel); real meters deviate conversely.\n* Choose Norton/parallel whenever current delivery is the primary active quantity.",
+      "changes": "* If the source is dependent: internal resistance is found via test voltage/current ratio (V_test / I_test), not inspection.\n* If high frequency is specified: replace pure resistance with parallel impedance (R in parallel with C).\n* If source conversion is needed: use Norton-Thevenin transformation ($V_s = I_s * R_p$, $R_s = R_p$).",
+      "variations": "* Asking for the internal resistance value of an ideal current source (infinity).\n* Asking for the equivalent Norton model of a real battery or solar cell.\n* Giving terminal V-I coordinates under two loads to calculate the internal parallel resistance.",
+      "syllabusText": "* Section: Electric Circuits\n* Subtopics: Network Elements (Ideal and practical independent sources), Network Theorems (Norton equivalent).",
+      "syllabusLinks": [],
+      "hook": "When I see practical current source, check parallel resistance because current splits across parallel branches.",
+      "createdAt": "2026-10-08T20:02:51.637Z",
+      "updatedAt": "2026-10-08T20:02:51.637Z"
     }
   },
   "topicNotes": {},
@@ -1649,7 +1915,7 @@
   "activity": {
     "2026-10-06": 6,
     "2026-10-07": 17,
-    "2026-10-08": 26
+    "2026-10-08": 34
   },
   "syllabusOverride": null
 }
